@@ -1,0 +1,35 @@
+{
+  "users": {
+    "user_uid": {
+      "name": "Nome do Cliente",
+      "email": "cliente@email.com",
+      "pago": true // Flag de segurança para o mural do axé
+    }
+  },
+  "consultas": {
+    "consulta_id": {
+      "userId": "user_uid",
+      "tipo": "Sessão Tarot",
+      "estado": "mentor_received", // 'aguardando', 'pago_cliente', 'mentor_received'
+      "valor": 45.00,
+      "createdAt": "timestamp"
+    }
+  },
+  "produtos": {
+    "produto_id": {
+      "nome": "Amuleto Proteção",
+      "preco": 25.00,
+      "stock": 10,
+      "isAtivo": true, // Controlado pelo Switch Master da Lojinha
+      "imagemUrl": "https://..."
+    }
+  },
+  "testemunhos": {
+    "testemunho_id": {
+      "userId": "user_uid",
+      "mensagem": "Sessão incrível!",
+      "consultaId": "consulta_id",
+      "createdAt": "timestamp"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-mystic-bg: #1a0f14;
+  --color-mystic-card: #2d1824;
+  --color-mystic-accent: #e11d48; /* Rose 600 */
+  --shadow-mystic: 0 8px 32px 0 rgba(225, 29, 72, 0.1);
+  --shadow-mystic-elevated: 0 12px 40px -5px rgba(225, 29, 72, 0.2);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-mystic-bg);
+    color: theme('colors.slate.200');
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .glass-mystic {
+    background: rgba(45, 24, 36, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(225, 29, 72, 0.15);
+  }
+  .button-mystic {
+    background: var(--color-mystic-accent);
+    box-shadow: var(--shadow-mystic-elevated);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .button-mystic:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 15px 45px -5px rgba(225, 29, 72, 0.3);
+  }
+}

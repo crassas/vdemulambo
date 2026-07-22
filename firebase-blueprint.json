@@ -1,0 +1,17 @@
+{
+  "collections": {
+    "users": {
+      "description": "User profiles and roles",
+      "documents": {
+        "{userId}": {
+          "nome": "string",
+          "email": "string",
+          "fotoPerfil": "string",
+          "role": "string",
+          "dataCriacao": "timestamp",
+          "ultimaAtividade": "timestamp"
+        }
+      }
+    }
+  }
+}
