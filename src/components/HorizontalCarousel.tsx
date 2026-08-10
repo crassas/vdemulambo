@@ -10,7 +10,7 @@ export function HorizontalCarousel({ title, children }: HorizontalCarouselProps)
   return (
     <div className="w-full">
       {title && (
-        <h3 className="text-sm font-sans text-rose-400/80 uppercase tracking-widest mb-4 px-4 sm:px-0">
+        <h3 className="text-sm font-sans text-accent/80 uppercase tracking-widest mb-4 px-4 sm:px-0">
           {title}
         </h3>
       )}

@@ -28,17 +28,17 @@ export function DisclaimerModal() {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="w-full max-w-md"
           >
-            <BentoBox className="bg-[#161224] border-rose-500/20 p-8 shadow-2xl relative overflow-hidden">
+            <BentoBox className="bg-popover border-accent/20 p-8 shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-transparent pointer-events-none" />
               
               <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-6">
-                  <Info className="w-6 h-6 text-rose-400" />
+                <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+                  <Info className="w-6 h-6 text-accent" />
                 </div>
                 
-                <h2 className="text-xl font-serif text-slate-100 mb-2">✨ Informação importante ✨</h2>
+                <h2 className="text-xl font-serif text-foreground mb-2">Informação importante </h2>
                 
-                <div className="space-y-4 text-sm text-slate-300 mt-6 leading-relaxed">
+                <div className="space-y-4 text-sm text-muted-foreground mt-6 leading-relaxed">
                   <p>
                     Esta aplicação destina-se exclusivamente à comunicação, acompanhamento e organização das consultas.
                   </p>
@@ -48,7 +48,7 @@ export function DisclaimerModal() {
                   <p>
                     Quaisquer contribuições ou transferências são efetuadas apenas através dos meios acordados diretamente com a mentora.
                   </p>
-                  <p className="text-xs text-slate-500 italic mt-6">
+                  <p className="text-xs text-muted-foreground italic mt-6">
                     A utilização da plataforma implica a aceitação destas condições.
                   </p>
                 </div>

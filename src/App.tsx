@@ -1,13 +1,14 @@
+import { ParticlesBackground } from "./components/ParticlesBackground";
 import { Sparkles, Moon, Send, X, Video, Menu, Mic, MicOff, VideoOff, PhoneOff, Camera, User, MessageCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BottomNav } from './components/BottomNav';
 import { LoginPage } from './components/LoginPage';
+import { IntroSplash } from './components/IntroSplash';
 import { useAuth } from './hooks/useAuth';
 import { ClientView } from './views/ClientView';
 import { AdminView } from './views/AdminView';
 import { Sidebar } from './components/Sidebar';
-import { Status } from './components/MBWayCard';
 import { CallInterface } from './components/CallInterface';
 import { DisclaimerModal } from './components/DisclaimerModal';
 import { WelcomeTutorial } from './components/WelcomeTutorial';
@@ -17,11 +18,15 @@ import { Toaster } from 'react-hot-toast';
 import { playStartSessionSound, playEndSessionSound } from './lib/sounds';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(true);
-  const { user, profile, loading: authLoading } = useAuth();
+      const { user, profile, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState(profile?.role === 'admin' ? 'dashboard' : 'inicio');
+  const [hasCompletedSplash, setHasCompletedSplash] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
 
   useEffect(() => {
     if (profile?.role === 'admin' && activeTab === 'inicio') {
@@ -31,7 +36,6 @@ export default function App() {
   
   const [sessionStatus, setSessionStatus] = useState<'idle' | 'payment_pending' | 'payment_sent' | 'mentor_received' | 'in_session' | 'session_completed'>('idle');
   
-  const activeMbwayStatus = (sessionStatus === 'idle' || sessionStatus === 'payment_pending' ? 'aguardando' : sessionStatus === 'payment_sent' ? 'enviado' : 'aprovado') as Status;
 
   useEffect(() => {
     if (sessionStatus === 'in_session') {
@@ -41,76 +45,44 @@ export default function App() {
     }
   }, [sessionStatus]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowIntro(false);
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, []);
 
-  // While intro is showing, don't show anything else
-  if (showIntro) {
-    return (
-      <motion.div
-        key="intro"
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-        transition={{ duration: 1.2, ease: "easeInOut" }}
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-mystic-bg"
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="flex flex-col items-center justify-center text-rose-400"
-        >
-          <Moon className="w-16 h-16 mb-8" />
-          <motion.h1 
-            initial={{ opacity: 0, letterSpacing: "0px" }}
-            animate={{ opacity: 1, letterSpacing: "8px" }}
-            transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-            className="text-2xl md:text-3xl font-serif text-slate-100 uppercase text-center ml-2"
-          >
-            Véus de Mulambo
-          </motion.h1>
-        </motion.div>
-      </motion.div>
-    );
-  }
 
   // Auth Loading State
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-mystic-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-rose-500/20 border-t-rose-400 rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
       </div>
     );
   }
 
   // Not logged in
   if (!user) {
+    if (!hasCompletedSplash) {
+      return <IntroSplash onDone={() => setHasCompletedSplash(true)} />;
+    }
     return <LoginPage />;
   }
 
   // Logged in flow
   if (profile?.role === 'admin') {
     return (
-      <div className="min-h-screen bg-[#0a0812] text-slate-200 font-sans selection:bg-pink-500/30 p-6 md:p-10 pb-32">
-        <DisclaimerModal />
+      <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 px-4 sm:px-6 md:px-10 pt-6 md:pt-8 pb-32">
+        <ParticlesBackground />
         <div className="max-w-7xl mx-auto">
           <AdminView onStartSession={() => setSessionStatus('in_session')} />
         </div>
 
         {/* Admin Footer */}
         <div className="max-w-3xl mx-auto mt-16 text-center pb-8 opacity-60">
-           <p className="text-[10px] text-pink-500/80 uppercase tracking-widest leading-relaxed px-4 font-medium">
-             ✨ Plataforma exclusiva para organização e comunicação. Nenhum pagamento é efetuado neste sistema.
+           <p className="text-[10px] text-accent uppercase tracking-widest leading-relaxed px-4 font-medium">
+             Plataforma exclusiva para organização e comunicação.
            </p>
         </div>
 
-        <AnimatePresence>
+      <AnimatePresence>
           {sessionStatus === 'in_session' && (
-            <CallInterface isMentora={true} onEndCall={() => setSessionStatus('idle')} />
+            <CallInterface isCartomante={true} onEndCall={() => setSessionStatus('idle')} />
           )}
         </AnimatePresence>
 
@@ -118,9 +90,9 @@ export default function App() {
           position="top-center"
           toastOptions={{
             style: {
-              background: '#0a0812',
-              color: '#fff',
-              border: '1px solid rgba(245, 158, 11, 0.2)',
+              background: 'var(--card)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
             }
           }}
         />
@@ -130,9 +102,11 @@ export default function App() {
 
   return (
     <>
+      <DisclaimerModal />
       <AnimatePresence>
-        {showTutorial && <WelcomeTutorial onClose={() => setShowTutorial(false)} />}
+        {showTutorial && <WelcomeTutorial userProfile={profile} onClose={() => setShowTutorial(false)} />}
       </AnimatePresence>
+      <ParticlesBackground />
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
@@ -144,32 +118,32 @@ export default function App() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="min-h-screen bg-mystic-bg text-slate-100 font-sans selection:bg-rose-500/30 p-4 md:p-10 pb-32"
+        className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 px-4 md:px-10 pt-20 md:pt-24 pb-32"
       >
-        <header className="sticky top-0 md:top-4 z-40 mb-10 flex flex-row items-center justify-between max-w-7xl mx-auto gap-4 bg-mystic-bg/90 backdrop-blur-xl border border-rose-500/10 p-3 sm:p-4 rounded-[2rem] shadow-2xl shadow-black/50">
-          <div className="flex items-center gap-3 sm:gap-6">
-            <button 
-              onClick={() => setIsSidebarOpen(true)}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500/20 transition-all group shrink-0"
-            >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-rose-400 group-hover:scale-110 transition-transform" />
-            </button>
-            <div className="flex items-center gap-2 sm:gap-3 text-rose-400">
-              <Moon className="w-6 h-6 sm:w-8 sm:h-8" />
-              <h1 className="text-xl sm:text-2xl font-serif tracking-wide text-slate-100 hidden sm:block">Véus de Mulambo</h1>
-            </div>
-          </div>
+        <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 sm:px-6 h-18 bg-gradient-to-b from-[#0e0a20]/95 via-[#090612]/92 to-[#090612]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+          {/* Left: Hamburger with luxury subtle outer ring */}
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/[0.02] border border-white/5 text-[#E0B1CB] hover:text-[#FDF9FC] hover:bg-white/5 hover:border-white/10 active:scale-95 transition-all duration-300 cursor-pointer shadow-inner"
+            aria-label="Abrir menu"
+          >
+            <Menu className="w-5.5 h-5.5" />
+          </button>
           
+          {/* Center: App Name styled as a luxury brand */}
+          <h1 className="font-serif text-[15px] sm:text-[16px] font-bold uppercase tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-[#FDF9FC] via-[#E0B1CB] to-[#9F86C0] absolute left-1/2 -translate-x-1/2 select-none">
+            Véus de Mulambo
+          </h1>
+          
+          {/* Right: Actions */}
           <div className="flex items-center gap-3">
-             <div className="text-right">
-               <p className="text-xs font-medium text-slate-100">{profile?.nome}</p>
-               <p className="text-[9px] text-rose-400 uppercase tracking-widest">{profile?.role}</p>
-             </div>
              {profile?.fotoPerfil ? (
-               <img src={profile.fotoPerfil} alt={profile.nome || ''} className="w-10 h-10 rounded-xl border border-rose-500/30 object-cover" />
+               <div className="w-10 h-10 rounded-full p-[1px] bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] shadow-md hover:rotate-6 transition-transform duration-300">
+                 <img src={profile?.fotoPerfil || undefined} alt={profile.nome || ''} className="w-full h-full rounded-full object-cover" referrerPolicy="no-referrer" />
+               </div>
              ) : (
-               <div className="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center">
-                 <User className="w-5 h-5 text-rose-400" />
+               <div className="w-10 h-10 rounded-full bg-[#E0B1CB]/10 border border-[#E0B1CB]/25 flex items-center justify-center shadow-md">
+                 <User className="w-5 h-5 text-[#E0B1CB]" />
                </div>
              )}
           </div>
@@ -190,7 +164,7 @@ export default function App() {
 
         {/* Client Footer */}
         <div className="max-w-3xl mx-auto mt-16 text-center pb-24 md:pb-8 opacity-60">
-           <p className="text-[10px] text-rose-400 uppercase tracking-widest leading-relaxed px-4 font-medium">
+           <p className="text-[10px] text-accent uppercase tracking-widest leading-relaxed px-4 font-medium">
              ✨ Plataforma exclusiva para organização e comunicação.<br className="hidden sm:block" /> Nenhum pagamento é efetuado neste sistema.
            </p>
         </div>
@@ -198,7 +172,7 @@ export default function App() {
 
       {/* Navigation - Only for clients */}
       {sessionStatus !== 'in_session' && (
-        <AnimatePresence>
+      <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
@@ -213,7 +187,7 @@ export default function App() {
       {/* Session Modal */}
       <AnimatePresence>
         {sessionStatus === 'in_session' && (
-          <CallInterface isMentora={false} onEndCall={() => setSessionStatus('session_completed')} />
+          <CallInterface isCartomante={false} onEndCall={() => setSessionStatus('session_completed')} />
         )}
       </AnimatePresence>
 
@@ -221,9 +195,9 @@ export default function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: '#1a1425',
-            color: '#fff',
-            border: '1px solid rgba(168, 85, 247, 0.2)',
+            background: 'var(--card)',
+            color: 'var(--foreground)',
+            border: '1px solid var(--border)',
           }
         }}
       />

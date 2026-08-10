@@ -1,6 +1,6 @@
 {
-  "name": "Véus de Mulambo",
-  "description": "Altar digital premium e hub de serviços espirituais exclusivos.",
+  "name": "Krys Ty Oya",
+  "description": "Espaço pessoal de Krys Ty Oya para consultas, conversas e acompanhamento próximo.",
   "requestFramePermissions": ["camera", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

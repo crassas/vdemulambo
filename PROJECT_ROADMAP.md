@@ -24,7 +24,8 @@ O **Véus de Mulambo** é uma aplicação web progressiva (PWA) de alta performa
 - [x] Garantir suporte completo a iPhones com persistência de sessão e experiência PWA fluida.
 - [x] Criação de documentação profissional em formato Markdown (`.md`) para download direto na área de Definições.
 
-### Fase 4: Futuro & Expansão (Planeado ⏳)
-- [ ] Notificações push em tempo real para novas mensagens de atendimento.
-- [ ] Histórico detalhado de consultas e notas privadas por consulente.
-- [ ] Suporte multilíngue (Espanhol e Inglês).
+### Fase 4: Futuro & Expansão (Concluído ✅)
+- [x] Notificações push em tempo real e centro de notificações no PWA.
+- [x] Histórico detalhado de consultas e notas privadas confidenciais por consulente na área da Mentora.
+- [x] Suporte multilíngue completo (Português, Espanhol e Inglês) com seletor de idioma no menu lateral.
+- [x] Tipagem forte em TypeScript em todos os componentes e vistas.

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Heart, TrendingUp, Compass, UserCheck, ShieldCheck, Sparkles, MessageSquare } from 'lucide-react';
 import { BentoBox } from '../components/BentoBox';
+import { DecksSection } from '../components/DecksSection';
 
 interface ServiceCardProps {
   icon: React.ElementType;
@@ -12,23 +13,37 @@ interface ServiceCardProps {
 
 function ServiceCard({ icon: Icon, title, description, onAction }: ServiceCardProps) {
   return (
-    <BentoBox className="p-6 flex flex-col h-full border-rose-500/10 hover:border-rose-500/30 transition-colors">
-      <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 mb-4 group-hover:scale-110 transition-transform">
-        <Icon className="w-6 h-6" />
+    <BentoBox className="p-6 flex flex-col h-full bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg hover:border-[#9F86C0]/40 transition-all">
+      <div className="w-12 h-12 rounded-full bg-[#9F86C0]/10 border border-[#9F86C0]/20 flex items-center justify-center text-[#E0B1CB] mb-4 group-hover:scale-105 transition-transform shadow-inner">
+        <Icon className="w-5 h-5 text-[#E0B1CB]" />
       </div>
-      <h3 className="font-serif text-xl text-slate-100 mb-2">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-1">{description}</p>
+      <h3 className="font-serif text-xl text-foreground mb-2 font-bold">{title}</h3>
+      <p className="text-xs text-muted-foreground leading-relaxed mb-6 flex-1">{description}</p>
       <button 
         onClick={onAction}
-        className="w-full py-3 rounded-xl bg-white/5 hover:bg-rose-500/20 text-rose-200 text-xs font-bold uppercase tracking-widest transition-all border border-white/5 flex items-center justify-center gap-2"
+        className="w-full py-3 rounded-full bg-[#090612]/40 hover:bg-[#9F86C0]/20 text-[#E0B1CB] text-xs font-bold uppercase tracking-widest transition-all border border-white/5 hover:border-[#9F86C0]/30 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
       >
-        Pedir consulta
+        Pedir informações
       </button>
     </BentoBox>
   );
 }
 
-export function ServicosView({ onSelectConsultation }: { onSelectConsultation: () => void }) {
+interface ServicosViewProps {
+  onSelectConsultation: () => void;
+  onSelectChat?: () => void;
+  hasTodayAppointment?: boolean;
+  todayAppointmentTime?: string;
+  onOpenBookingModal?: () => void;
+}
+
+export function ServicosView({ 
+  onSelectConsultation, 
+  onSelectChat, 
+  hasTodayAppointment, 
+  todayAppointmentTime,
+  onOpenBookingModal 
+}: ServicosViewProps) {
   const services = [
     {
       icon: Heart,
@@ -54,89 +69,119 @@ export function ServicosView({ onSelectConsultation }: { onSelectConsultation: (
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-5xl mx-auto space-y-12 pb-20"
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="max-w-5xl mx-auto space-y-10 pb-28"
     >
       {/* Header section */}
-      <div className="text-center space-y-4">
-        <h2 className="text-sm font-sans text-rose-400 uppercase tracking-[0.4em] flex items-center justify-center gap-3">
-          <Sparkles className="w-4 h-4" /> Sabedoria e Orientação
-        </h2>
-        <h1 className="font-serif text-4xl md:text-5xl text-slate-100 tracking-tight">Consultas e Serviços</h1>
-        <p className="text-slate-500 italic font-serif">
+      <div className="text-center space-y-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E0B1CB]/10 border border-[#E0B1CB]/20 text-[#E0B1CB] text-[10px] font-bold uppercase tracking-widest">
+          <Sparkles className="w-3.5 h-3.5 text-[#E0B1CB]" /> Sabedoria & Orientação
+        </div>
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-cream tracking-tight font-bold">
+          Consultas & Atendimentos
+        </h1>
+        <p className="text-muted-foreground italic font-serif text-sm max-w-md mx-auto">
           "A verdade que procuras está ao teu alcance."
         </p>
       </div>
 
       {/* Main Feature: Spiritual Consultation */}
       <section>
-        <BentoBox className="relative overflow-hidden border-2 border-pink-500/20 bg-gradient-to-br from-rose-900/20 to-pink-900/10 shadow-2xl shadow-pink-500/5">
-          {/* Decorative gold corners */}
-          <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-pink-500/40 rounded-tl-3xl" />
-          <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-pink-500/40 rounded-br-3xl" />
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#140E26]/90 via-[#1B1233]/80 to-[#0C0A14] border border-white/10 rounded-[32px] shadow-2xl p-8 md:p-12">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#E0B1CB]/10 via-[#9F86C0]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
           
-          <div className="p-8 md:p-12 grid md:grid-cols-3 gap-8 items-center">
-            <div className="md:col-span-2 space-y-6">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 text-[10px] font-bold uppercase tracking-widest border border-pink-500/30">
-                  Destaque
+          <div className="relative z-10 grid md:grid-cols-3 gap-8 items-center">
+            <div className="md:col-span-2 space-y-5">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="px-3 py-1 rounded-full bg-[#E0B1CB]/20 text-[#E0B1CB] text-[10px] font-extrabold uppercase tracking-widest border border-[#E0B1CB]/30">
+                  Sessão em Destaque
                 </span>
-                <span className="flex items-center gap-1.5 text-[10px] text-green-400 uppercase tracking-widest font-bold">
-                  <ShieldCheck className="w-3 h-3" /> Máximo Sigilo
+                <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 uppercase tracking-widest font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Atendimento Privado e Seguro
                 </span>
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl text-slate-100">Consulta</h2>
-              <p className="text-slate-300 text-lg leading-relaxed">
-                Uma imersão profunda no seu campo vibracional através do baralho cigano e vidência intuitiva. Obtenha respostas claras para as suas dúvidas mais inquietantes.
+              <h2 className="font-serif text-3xl sm:text-4xl text-cream font-bold leading-tight">
+                Consulta Completa
+              </h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Um espaço acolhedor e confidencial para obter clareza sobre relacionamentos, caminhos e decisões importantes. Acompanhamento direcionado e escuta atenta.
               </p>
               <div className="flex flex-wrap gap-4 pt-2">
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Duração: ~45 min
+                <div className="flex items-center gap-2 text-cream/80 text-xs font-semibold uppercase tracking-wider bg-white/5 px-3.5 py-1.5 rounded-full border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-[#9F86C0]" /> Duração: ~45 min
                 </div>
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Via Vídeo ou Voz
+                <div className="flex items-center gap-2 text-cream/80 text-xs font-semibold uppercase tracking-wider bg-white/5 px-3.5 py-1.5 rounded-full border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-[#E0B1CB]" /> Videochamada ou Áudio
                 </div>
               </div>
             </div>
             
-            <div className="flex flex-col items-center justify-center p-8 rounded-[2rem] glass-mystic border border-pink-500/30 bg-pink-500/5">
-              <p className="text-pink-500/60 uppercase tracking-[0.2em] text-[10px] font-bold mb-2">Troca Energética</p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-serif text-slate-100">35</span>
-                <span className="text-xl font-serif text-pink-500">€</span>
-              </div>
-              <button 
-                onClick={onSelectConsultation}
-                className="mt-8 w-full py-4 rounded-2xl button-mystic text-white font-bold uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg shadow-rose-500/20"
-              >
-                <MessageSquare className="w-5 h-5" /> Iniciar Agora
-              </button>
+            <div className="flex flex-col items-center justify-center p-6 sm:p-8 rounded-[28px] bg-[#090612]/80 border border-white/10 shadow-2xl">
+              {hasTodayAppointment ? (
+                <>
+                  <span className="px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold uppercase tracking-widest border border-emerald-500/30 mb-3 animate-pulse">
+                    ✨ Sessão Ativa Hoje ({todayAppointmentTime || 'Agendada'})
+                  </span>
+                  <p className="text-xs text-muted-foreground text-center mb-6 leading-relaxed">
+                    A sua sala com Krys Ty Oya está disponível.
+                  </p>
+                  <button 
+                    onClick={onSelectConsultation}
+                    className="w-full py-4 bg-gradient-to-r from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] text-xs font-extrabold uppercase tracking-widest rounded-2xl transition-all cursor-pointer shadow-[0_10px_25px_rgba(159,134,192,0.3)] flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <MessageSquare className="w-4 h-4 text-[#140E26]" /> Entrar na Consulta
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="px-3.5 py-1 rounded-full bg-[#9F86C0]/20 text-[#E0B1CB] text-[10px] font-extrabold uppercase tracking-widest border border-[#9F86C0]/30 mb-3">
+                    Acesso Agendado
+                  </span>
+                  <p className="text-xs text-muted-foreground text-center mb-6 leading-relaxed">
+                    Escolha a melhor data e hora para a sua sessão.
+                  </p>
+                  <button 
+                    onClick={onOpenBookingModal || onSelectConsultation}
+                    className="w-full py-4 bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] hover:brightness-110 text-[#140E26] text-xs font-extrabold uppercase tracking-widest rounded-2xl transition-all cursor-pointer shadow-[0_10px_25px_rgba(197,160,89,0.25)] flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <Sparkles className="w-4 h-4 text-[#140E26]" /> Agendar Agora
+                  </button>
+                </>
+              )}
             </div>
           </div>
-        </BentoBox>
+        </div>
+      </section>
+
+      {/* Baralhos Utilizados Section */}
+      <section>
+        <DecksSection onSelectConsultation={onSelectConsultation} />
       </section>
 
       {/* Individual Service Grid */}
       <section className="space-y-6">
         <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-rose-500/20" />
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Trabalhos Específicos</h3>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-rose-500/20" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#E0B1CB] flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5" /> Acompanhamentos Específicos
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
         
-        <div className="flex overflow-x-auto gap-4 sm:gap-6 pb-6 snap-x snap-mandatory custom-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="w-[260px] sm:w-[280px] snap-center shrink-0 flex flex-col"
+              transition={{ delay: index * 0.08 }}
+              className="flex"
             >
               <ServiceCard 
                 {...service} 
-                onAction={onSelectConsultation}
+                onAction={onSelectChat || onSelectConsultation}
               />
             </motion.div>
           ))}
@@ -144,9 +189,9 @@ export function ServicosView({ onSelectConsultation }: { onSelectConsultation: (
       </section>
 
       {/* Footer message */}
-      <div className="pt-10 text-center opacity-40">
-        <p className="text-[10px] text-slate-500 uppercase tracking-[0.5em] font-light">
-          Plataforma Oficial da Mentora Mulambo
+      <div className="pt-6 text-center opacity-50">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-medium">
+          Véus de Mulambo • Krys Ty Oya
         </p>
       </div>
     </motion.div>

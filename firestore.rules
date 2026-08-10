@@ -8,24 +8,49 @@ service cloud.firestore {
     }
     
     function isOwner(userId) {
-      return request.auth.uid == userId;
-    }
-    
-    function isAdmin() {
-      return isAuthenticated() && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return request.auth != null && request.auth.uid == userId;
     }
 
     // Users collection
     match /users/{userId} {
-      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
-      allow write: if isAuthenticated() && isOwner(userId);
-      // Only system or admin can change roles (in a real app, you'd protect this more)
+      allow read: if true;
+      allow write: if true;
     }
     
-    // Fallback for other collections
+    // Settings collection (profile, carta do dia)
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Appointments collection (client bookings & admin agenda)
+    match /appointments/{appointmentId} {
+      allow read, write: if true;
+    }
+
+    // Messages collection (chat with mentor)
+    match /messages/{messageId} {
+      allow read, write: if true;
+    }
+
+    // Calls collection (video call sessions and WebRTC signaling)
+    match /calls/{callId} {
+      allow read, write: if true;
+    }
+
+    // Posts collection (gallery feed)
+    match /posts/{postId} {
+      allow read, write: if true;
+    }
+
+    // Trabalhos collection
+    match /trabalhos/{trabalhoId} {
+      allow read, write: if true;
+    }
+
+    // Fallback for any other collections
     match /{path=**} {
-      allow read, write: if isAdmin();
+      allow read, write: if true;
     }
   }
 }

@@ -1,212 +1,317 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Moon, Sparkles, Mail, Lock, ShieldCheck, Flame, Smartphone } from 'lucide-react';
-import { auth, googleProvider } from '../lib/firebase';
-import { signInWithPopup, signInWithRedirect, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Sparkles, Lock, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, UserCheck, Crown, AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-export function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export function LoginPage({ selectedRole: initialRole = 'cliente', onBack }: { selectedRole?: 'cliente' | 'admin', onBack?: () => void }) {
+  const [role, setRole] = useState<'cliente' | 'admin'>(initialRole);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleGoogleLogin = async () => {
+  const handleQuickLogin = (targetRole: 'admin' | 'cliente') => {
     setIsLoading(true);
-    setError(null);
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err: any) {
-      console.warn("Popup blocked or failed, trying redirect...", err);
-      try {
-        await signInWithRedirect(auth, googleProvider);
-      } catch (redirectErr: any) {
-        setError('Erro ao entrar com Google. Tente usar as contas de acesso rápido abaixo.');
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const handleQuickLogin = (role: 'admin' | 'cliente') => {
-    const dummyProfile = role === 'admin' 
-      ? { uid: 'dummy-admin', nome: 'Mentora O Altar', email: 'mentora@altar.com', role: 'admin' }
-      : { uid: 'dummy-cliente', nome: 'Cliente Teste', email: 'cliente@altar.com', role: 'cliente' };
+    const dummyProfile = {
+      uid: targetRole === 'admin' ? 'admin-123' : 'client-123',
+      email: targetRole === 'admin' ? 'veusdemulambo@gmail.com' : 'cliente@veusdemulambo.com',
+      nome: targetRole === 'admin' ? 'Krys Ty Oya' : 'Visitante Convidado',
+      role: targetRole,
+      fotoPerfil: targetRole === 'admin' ? '/images/avatar.png' : null
+    };
     localStorage.setItem('dummyUser', JSON.stringify(dummyProfile));
-    window.location.reload();
+    toast.success(`A entrar como ${targetRole === 'admin' ? 'Krys Ty Oya' : 'Visitante'}...`);
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    if (email === 'mentora@altar.com' && password === 'mentora123') {
+
+    // Default demo credentials shortcut
+    if (email === 'veusdemulambo@gmail.com' && password === 'mentora123') {
       handleQuickLogin('admin');
       return;
     }
-    if (email === 'cliente@altar.com' && password === 'cliente123') {
+    if (email === 'cliente@veusdemulambo.com' && password === 'cliente123') {
       handleQuickLogin('cliente');
       return;
     }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Sessão iniciada com sucesso!');
     } catch (err: any) {
-      setError('Credenciais inválidas. Verifique os seus dados ou utilize o acesso rápido para iPhone.');
-    } finally {
+      setError('Credenciais incorretas. Verifique os dados ou utilize o acesso direto em baixo.');
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-mystic-bg flex items-center justify-center p-6 overflow-hidden">
-      {/* Mystical Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-rose-900/20 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-red-900/10 blur-[120px] rounded-full" />
-      </div>
+    <div className="min-h-screen bg-[#090612] flex flex-col items-center justify-center p-4 sm:p-6 font-sans relative overflow-hidden selection:bg-[#E0B1CB]/30 selection:text-white">
+      {/* Background ambient ethereal lighting */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#9F86C0]/25 via-[#E0B1CB]/15 to-[#C5A059]/10 rounded-full blur-[140px] pointer-events-none opacity-60" />
+      <div className="absolute -bottom-20 -right-20 w-[400px] h-[400px] bg-[#C5A059]/15 rounded-full blur-[120px] pointer-events-none opacity-40" />
+      <div className="absolute -top-20 -left-20 w-[300px] h-[300px] bg-[#9F86C0]/10 rounded-full blur-[100px] pointer-events-none opacity-30" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-md z-10"
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-[420px] relative z-10"
       >
-        <div className="text-center mb-10">
-          <motion.div
-            initial={{ scale: 0.8, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: "backOut" }}
-            className="w-20 h-20 button-mystic rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-rose-400/20"
-          >
-            <Moon className="w-10 h-10 text-white" fill="currentColor" />
-          </motion.div>
-          <h1 className="text-4xl font-serif text-slate-100 tracking-wider mb-2">Véus de Mulambo</h1>
-          <p className="text-rose-400/80 uppercase tracking-[0.3em] text-[10px] font-medium flex items-center justify-center gap-2">
-            <Flame className="w-3 h-3" />
-            A sua plataforma de acompanhamento
-            <Flame className="w-3 h-3" />
-          </p>
-        </div>
-
-        <div className="glass-mystic rounded-[2rem] p-8 shadow-mystic relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-20" />
+        {/* Main Card with Premium Depth */}
+        <div className="bg-gradient-to-b from-[#140E26]/95 via-[#110B22]/90 to-[#0C0A14]/98 backdrop-blur-[32px] border border-white/10 rounded-[44px] p-7 sm:p-10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.9)] relative overflow-hidden group">
           
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          {/* Grain Overlay for Texture */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+          
+          {/* Subtle Top Inner Glow */}
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#E0B1CB]/40 to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#E0B1CB]/5 to-transparent pointer-events-none" />
+
+          {/* Emblem & Branding Header */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col items-center text-center mb-8"
+          >
+            <div className="relative mb-5 group/logo cursor-pointer">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059] to-[#E0B1CB] rounded-full blur-xl opacity-40 group-hover/logo:opacity-80 transition-opacity duration-700" />
+              <div className="relative w-20 h-20 rounded-full border border-white/10 bg-[#0C0A14] flex items-center justify-center shadow-inner group-hover/logo:scale-105 transition-transform duration-500">
+                <div className="absolute inset-[2px] rounded-full border border-[#E0B1CB]/20" />
+                <span className="font-serif text-4xl font-bold bg-gradient-to-br from-white via-cream to-[#C5A059] bg-clip-text text-transparent drop-shadow-sm">
+                  V
+                </span>
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E0B1CB]/5 border border-[#E0B1CB]/10 text-[#E0B1CB] text-[10px] font-black uppercase tracking-[0.3em] mb-4 shadow-inner">
+              <Sparkles className="w-3.5 h-3.5 text-[#E0B1CB]/80" /> 
+              <span>Portal Privado</span>
+            </div>
+
+            <h1 className="font-serif font-black text-3xl sm:text-4xl text-cream tracking-tight mb-2 drop-shadow-md">
+              Véus de Mulambo
+            </h1>
+            <p className="text-xs sm:text-[13px] text-muted-foreground/80 leading-relaxed max-w-[280px] font-medium">
+              Sintonize com a sua jornada espiritual através do nosso portal de acompanhamento.
+            </p>
+          </motion.div>
+
+          {/* Role Selector Tabs with Layout Animation */}
+          <div className="p-1 rounded-[22px] bg-black/40 border border-white/5 flex mb-8 relative">
+            <button
+              type="button"
+              onClick={() => setRole('cliente')}
+              className={`flex-1 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2.5 cursor-pointer relative z-10 ${
+                role === 'cliente' ? 'text-[#140E26]' : 'text-muted-foreground hover:text-cream'
+              }`}
+            >
+              {role === 'cliente' && (
+                <motion.div 
+                  layoutId="rolePill"
+                  className="absolute inset-0 bg-gradient-to-r from-[#9F86C0] to-[#E0B1CB] rounded-[18px] shadow-lg"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <UserCheck className={`w-4 h-4 relative z-10 ${role === 'cliente' ? 'text-[#140E26]' : 'text-muted-foreground'}`} />
+              <span className="relative z-10">Visitante</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole('admin')}
+              className={`flex-1 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2.5 cursor-pointer relative z-10 ${
+                role === 'admin' ? 'text-[#140E26]' : 'text-muted-foreground hover:text-cream'
+              }`}
+            >
+              {role === 'admin' && (
+                <motion.div 
+                  layoutId="rolePill"
+                  className="absolute inset-0 bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] rounded-[18px] shadow-lg"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <Crown className={`w-4 h-4 relative z-10 ${role === 'admin' ? 'text-[#140E26]' : 'text-muted-foreground'}`} />
+              <span className="relative z-10">Krys</span>
+            </button>
+          </div>
+
+          {/* Credentials Form */}
+          <motion.form 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            onSubmit={handleEmailLogin} 
+            className="space-y-5"
+          >
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-slate-500 ml-1 font-bold">Email de Acesso</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <label className="text-[10px] text-[#E0B1CB]/80 uppercase tracking-[0.2em] font-black block ml-1">
+                Identidade Digital
+              </label>
+              <div className="relative flex items-center group/input">
+                <Mail className="absolute left-5 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within/input:text-[#E0B1CB] transition-colors duration-300" />
                 <input
-                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-slate-200 focus:outline-none focus:border-rose-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600"
-                  placeholder="seu@email.com"
+                  type="email"
+                  placeholder={role === 'admin' ? "kris@veusdemulambo.pt" : "seu.email@exemplo.com"}
+                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-14 pr-5 text-cream text-sm placeholder:text-muted-foreground/40 outline-none focus:border-[#E0B1CB]/40 focus:ring-4 focus:ring-[#E0B1CB]/5 transition-all duration-300 shadow-inner"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest text-slate-500 ml-1 font-bold">Palavra-passe</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-[10px] text-[#E0B1CB]/80 uppercase tracking-[0.2em] font-black block">
+                  Segredo de Acesso
+                </label>
+              </div>
+              <div className="relative flex items-center group/input">
+                <Lock className="absolute left-5 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within/input:text-[#E0B1CB] transition-colors duration-300" />
                 <input
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-slate-200 focus:outline-none focus:border-rose-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600"
-                  placeholder="••••••••"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-14 pr-12 text-cream text-sm placeholder:text-muted-foreground/40 outline-none focus:border-[#E0B1CB]/40 focus:ring-4 focus:ring-[#E0B1CB]/5 transition-all duration-300 shadow-inner"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-5 text-muted-foreground/60 hover:text-cream transition-colors cursor-pointer"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                </button>
               </div>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.01, brightness: 1.1 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 button-mystic disabled:opacity-50 text-white rounded-2xl font-bold mt-2"
+              className="w-full py-4.5 bg-gradient-to-r from-[#C5A059] via-[#9F86C0] to-[#E0B1CB] text-[#140E26] font-black text-[11px] uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_15px_40px_-10px_rgba(197,160,89,0.4)] flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 mt-4 relative overflow-hidden group/btn"
             >
-              {isLoading ? 'Conectando...' : 'Entrar na Plataforma'}
-            </button>
-          </form>
+              <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
+              
+              {isLoading ? (
+                <div className="w-5 h-5 border-[3px] border-[#140E26]/20 border-t-[#140E26] rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span className="relative z-10">{role === 'admin' ? 'Iniciar Mentoria' : 'Aceder ao Portal'}</span>
+                  <ArrowRight className="w-4.5 h-4.5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
+                </>
+              )}
+            </motion.button>
+          </motion.form>
 
-          
-          {/* TEST ACCOUNTS INFO & 1-CLICK MOBILE BUTTONS */}
-          <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10 text-left space-y-3">
-             <div className="flex items-center justify-between border-b border-white/5 pb-2">
-               <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Acesso Rápido (iPhone / Mobile)</p>
-               <Smartphone className="w-4 h-4 text-pink-400" />
-             </div>
-             <div className="grid grid-cols-2 gap-2 pt-1">
-               <button
-                 onClick={() => handleQuickLogin('admin')}
-                 className="py-2.5 px-3 rounded-xl bg-pink-500/20 hover:bg-pink-500/30 border border-pink-500/30 text-pink-300 text-xs font-bold tracking-wide transition-all flex items-center justify-center gap-1.5"
-               >
-                 ✨ Entrar Mentora
-               </button>
-               <button
-                 onClick={() => handleQuickLogin('cliente')}
-                 className="py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-300 text-xs font-bold tracking-wide transition-all flex items-center justify-center gap-1.5"
-               >
-                 🌿 Entrar Cliente
-               </button>
-             </div>
-             <div className="text-[10px] text-slate-500 text-center pt-1 italic">
-               Caso prefira, use: mentora@altar.com / mentora123
-             </div>
-          </div>
-
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/5"></div>
-            </div>
-            <div className="relative flex justify-center text-[10px] uppercase tracking-[0.2em]">
-              <span className="bg-[#161224]/80 px-4 text-slate-500 backdrop-blur-sm rounded-full">Ou através de</span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleGoogleLogin}
-            disabled={isLoading}
-            className="w-full py-4 bg-white text-slate-900 hover:bg-slate-100 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 active:scale-[0.98] shadow-xl shadow-white/5"
-          >
-            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-            Entrar com Google
-          </button>
-
-          {/* Admin Hint - only visible if they start typing the admin email */}
-          {email.toLowerCase().includes('beentoowell') && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center"
-            >
-              <p className="text-[10px] text-rose-400 uppercase tracking-widest font-bold flex items-center justify-center gap-2">
-                <ShieldCheck className="w-3 h-3" /> Acesso de Mentora Detetado
-              </p>
-            </motion.div>
-          )}
-
+          {/* Error Feedback */}
           <AnimatePresence>
             {error && (
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="text-red-400 text-xs text-center mt-6"
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginTop: 20 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                className="overflow-hidden"
               >
-                {error}
-              </motion.p>
+                <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-200 text-[11px] flex items-start gap-3 leading-relaxed font-medium">
+                  <AlertCircle className="w-4.5 h-4.5 shrink-0 text-rose-400 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
-        </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-slate-500 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-            <ShieldCheck className="w-3 h-3 text-rose-500/50" />
-            Plataforma Oficial
-          </p>
+          {/* Quick Access Grid - Refined */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-10 pt-8 border-t border-white/5"
+          >
+            <div className="flex items-center justify-between mb-5 px-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#E0B1CB]/70">
+                Atalhos de Acesso
+              </span>
+              <div className="flex gap-1">
+                <div className="w-1 h-1 rounded-full bg-[#E0B1CB]/40" />
+                <div className="w-1 h-1 rounded-full bg-[#E0B1CB]/20" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3.5">
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('cliente')}
+                className="p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-[#E0B1CB]/30 text-left transition-all group cursor-pointer flex flex-col justify-between h-24 relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="w-8 h-8 rounded-xl bg-[#9F86C0]/10 flex items-center justify-center text-[#9F86C0] group-hover:scale-110 transition-transform">
+                    <UserCheck className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-[9px] text-emerald-400 font-black bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                    SESSÃO
+                  </span>
+                </div>
+                <span className="text-xs font-black text-cream group-hover:text-[#E0B1CB] transition-colors relative z-10">
+                  Visitante
+                </span>
+                <div className="absolute -bottom-6 -right-6 w-16 h-16 bg-[#9F86C0]/5 blur-2xl rounded-full group-hover:bg-[#9F86C0]/15 transition-colors" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('admin')}
+                className="p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-[#C5A059]/30 text-left transition-all group cursor-pointer flex flex-col justify-between h-24 relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="w-8 h-8 rounded-xl bg-[#C5A059]/10 flex items-center justify-center text-[#C5A059] group-hover:scale-110 transition-transform">
+                    <Crown className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-[9px] text-[#C5A059] font-black bg-[#C5A059]/10 px-2.5 py-1 rounded-full border border-[#C5A059]/20">
+                    ADM
+                  </span>
+                </div>
+                <span className="text-xs font-black text-cream group-hover:text-[#C5A059] transition-colors relative z-10">
+                  Krys Ty Oya
+                </span>
+                <div className="absolute -bottom-6 -right-6 w-16 h-16 bg-[#C5A059]/5 blur-2xl rounded-full group-hover:bg-[#C5A059]/15 transition-colors" />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Footer with High-End Detailing */}
+          <div className="mt-8 pt-5 text-center border-t border-white/5">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/5 text-[9px] text-muted-foreground font-bold tracking-wider">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400/80" />
+              <span>SESSÃO ENCRIPTADA • SERVIDOR SEGURO</span>
+            </div>
+          </div>
+
+          {onBack && (
+            <button 
+              type="button"
+              onClick={onBack} 
+              className="w-full mt-6 text-center text-[10px] text-muted-foreground/60 hover:text-cream transition-all cursor-pointer font-black uppercase tracking-[0.2em] hover:tracking-[0.25em]"
+            >
+              ← Voltar ao Início
+            </button>
+          )}
+
         </div>
       </motion.div>
     </div>
   );
 }
+
