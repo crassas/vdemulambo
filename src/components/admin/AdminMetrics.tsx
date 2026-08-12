@@ -12,9 +12,9 @@ export function AdminMetrics({ setActiveTab }: { setActiveTab?: (tab: string) =>
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0B1CB]/10 border border-[#E0B1CB]/20 mb-2">
             <Sparkles className="w-3 h-3 text-[#E0B1CB]" />
-            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[#E0B1CB]">Espaço da Krys</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[#E0B1CB]">Espaço da Kris</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-black text-cream tracking-tight">Krys Ty Oya</h1>
+          <h1 className="font-serif text-3xl sm:text-5xl font-black text-cream tracking-tight">Kris Ty Oya</h1>
           <p className="text-sm text-[#BE95C4]/60 font-medium tracking-wide">Gestão das minhas conversas e acompanhamento em tempo real.</p>
         </div>
         

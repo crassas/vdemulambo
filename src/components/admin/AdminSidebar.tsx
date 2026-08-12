@@ -15,7 +15,6 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ isOpen, onClose, userProfile, activeTab, setActiveTab }: AdminSidebarProps) {
   const handleLogout = () => {
-    localStorage.removeItem('dummyUser');
     signOut(auth).then(() => {
         window.location.reload();
     });
@@ -89,12 +88,12 @@ export function AdminSidebar({ isOpen, onClose, userProfile, activeTab, setActiv
 
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5">
-                  <h2 className="font-serif text-lg text-[#FDF9FC] font-bold tracking-tight">{userProfile?.nome || 'Krys Ty Oya'}</h2>
+                  <h2 className="font-serif text-lg text-[#FDF9FC] font-bold tracking-tight">{userProfile?.nome || 'Kris Ty Oya'}</h2>
                   <Sparkles className="w-4 h-4 text-[#E0B1CB] animate-pulse" />
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9F86C0]/15 to-[#E0B1CB]/15 border border-[#BE95C4]/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#E0B1CB]" />
-                  <span className="text-[8.5px] text-[#E0B1CB] uppercase tracking-[0.2em] font-extrabold">Krys • O Meu Espaço</span>
+                  <span className="text-[8.5px] text-[#E0B1CB] uppercase tracking-[0.2em] font-extrabold">Kris • O Meu Espaço</span>
                 </div>
               </div>
             </div>
@@ -139,7 +138,7 @@ export function AdminSidebar({ isOpen, onClose, userProfile, activeTab, setActiv
                 <span className="text-[10px] font-extrabold uppercase tracking-widest">Encerrar Sessão</span>
               </button>
               <div className="text-center space-y-1">
-                <p className="text-[8px] text-[#BE95C4]/50 uppercase tracking-[0.22em] font-semibold">Krys Ty Oya • O Meu Canto</p>
+                <p className="text-[8px] text-[#BE95C4]/50 uppercase tracking-[0.22em] font-semibold">Kris Ty Oya • O Meu Canto</p>
                 <p className="text-[7px] text-[#BE95C4]/35 font-mono">A MINHA GESTÃO</p>
               </div>
             </div>

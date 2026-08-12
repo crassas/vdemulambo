@@ -3,6 +3,12 @@ import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 
+const ADMIN_EMAIL = 'veusdemulambo@gmail.com';
+
+function isAdminAccount(email: string | null | undefined) {
+  return email?.trim().toLowerCase() === ADMIN_EMAIL;
+}
+
 export interface UserProfile {
   uid: string;
   nome: string | null;
@@ -29,29 +35,6 @@ export function useAuth() {
       }
     }, 3000);
 
-    // Check for dummy login first
-    try {
-      const dummyUser = localStorage.getItem('dummyUser');
-      if (dummyUser) {
-        let dummyProfile = JSON.parse(dummyUser);
-        // Sanitize old names
-        if (dummyProfile.nome === 'Kris Ty Oya' || dummyProfile.nome === 'Kris') {
-          dummyProfile.nome = 'Krys Ty Oya';
-          localStorage.setItem('dummyUser', JSON.stringify(dummyProfile));
-        } else if (dummyProfile.nome === 'Consulente Convidado' || dummyProfile.nome === 'Consulente' || dummyProfile.nome === 'Cliente') {
-          dummyProfile.nome = 'Visitante Convidado';
-          localStorage.setItem('dummyUser', JSON.stringify(dummyProfile));
-        }
-        setUser({ uid: dummyProfile.uid, email: dummyProfile.email, displayName: dummyProfile.nome } as any);
-        setProfile(dummyProfile);
-        setLoading(false);
-        clearTimeout(timer);
-        return;
-      }
-    } catch (e) {
-      console.error("LocalStorage error:", e);
-    }
-
     let unsubscribe = () => {};
     let unsubscribeProfile: (() => void) | null = null;
     try {
@@ -72,10 +55,10 @@ export function useAuth() {
               
               if (!userSnap.exists()) {
                 // Create new profile
-                const isAdmin = firebaseUser.email?.toLowerCase() === 'beentoowell@gmail.com' || firebaseUser.email?.toLowerCase() === 'cartomante@veusdemulambo.com' || firebaseUser.email?.toLowerCase() === 'veusdemulambo@gmail.com';
+                const isAdmin = isAdminAccount(firebaseUser.email);
                 const newProfile: UserProfile = {
                   uid: firebaseUser.uid,
-                  nome: firebaseUser.displayName || (isAdmin ? 'Krys Ty Oya' : 'Visitante Convidada'),
+                  nome: firebaseUser.displayName || (isAdmin ? 'Kris Ty Oya' : 'Consulente'),
                   email: firebaseUser.email,
                   fotoPerfil: isAdmin ? '/images/avatar.png' : firebaseUser.photoURL,
                   role: isAdmin ? 'admin' : 'cliente',
@@ -89,26 +72,25 @@ export function useAuth() {
               unsubscribeProfile = onSnapshot(userRef, (docSnap) => {
                 if (!isMounted) return;
                 if (docSnap.exists()) {
-                  let data = docSnap.data() as UserProfile;
-                  
-                  // Auto-promote if email matches admin email (case insensitive)
-                  if ((data.email?.toLowerCase() === 'beentoowell@gmail.com' || data.email?.toLowerCase() === 'cartomante@veusdemulambo.com' || data.email?.toLowerCase() === 'veusdemulambo@gmail.com') && data.role !== 'admin') {
-                    data.role = 'admin';
-                    setDoc(userRef, { role: 'admin' }, { merge: true }).catch(() => {});
+                  const data = docSnap.data() as UserProfile;
+                  const trustedRole: UserProfile['role'] = isAdminAccount(firebaseUser.email) ? 'admin' : 'cliente';
+                  const trustedProfile = {
+                    ...data,
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    role: trustedRole,
+                    nome: data.nome || (trustedRole === 'admin' ? 'Kris Ty Oya' : firebaseUser.displayName || 'Consulente'),
+                  };
+
+                  if (data.role !== trustedRole) {
+                    setDoc(userRef, { role: trustedRole }, { merge: true }).catch(() => {});
                   }
 
-                  if (data.role === 'admin' && (data.nome === 'Kris Ty Oya' || data.nome === 'Kris' || !data.nome)) {
-                    data.nome = 'Krys Ty Oya';
-                  }
-                  if (data.role === 'cliente' && (data.nome === 'Consulente' || data.nome === 'Consulente Convidado' || !data.nome)) {
-                    data.nome = 'Visitante Convidada';
-                  }
-
-                  if (data.role === 'admin' && (!data.fotoPerfil || data.fotoPerfil.includes('unsplash'))) {
-                    data.fotoPerfil = '/images/avatar.png';
+                  if (trustedRole === 'admin' && (!trustedProfile.fotoPerfil || trustedProfile.fotoPerfil.includes('unsplash'))) {
+                    trustedProfile.fotoPerfil = '/images/avatar.png';
                   }
                   
-                  setProfile({ ...data });
+                  setProfile(trustedProfile);
                 }
               }, (err) => {
                 console.error("Profile Snapshot Error:", err);
@@ -119,7 +101,7 @@ export function useAuth() {
             } catch (firestoreErr) {
               console.error("Firestore Profile Error:", firestoreErr);
               // Fallback profile if Firestore fails (e.g. offline / permission / quota)
-              const isAdmin = firebaseUser.email?.toLowerCase() === 'beentoowell@gmail.com' || firebaseUser.email?.toLowerCase() === 'cartomante@veusdemulambo.com' || firebaseUser.email?.toLowerCase() === 'veusdemulambo@gmail.com';
+              const isAdmin = isAdminAccount(firebaseUser.email);
               setProfile({
                 uid: firebaseUser.uid,
                 nome: firebaseUser.displayName || 'Utilizador',

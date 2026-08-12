@@ -676,11 +676,11 @@ export function ClientView({
                   </div>
                   <div>
                     <h3 className="font-serif text-base sm:text-lg font-bold text-foreground flex items-center gap-1.5">
-                      Krys Ty Oya
+                      Kris Ty Oya
                       <Sparkles className="w-3.5 h-3.5 text-[#E0B1CB] animate-pulse" />
                     </h3>
                     <p className="text-[10px] text-[#E0B1CB]/90 uppercase tracking-widest font-bold flex items-center gap-1">
-                      <span>Online • Krys</span>
+                      <span>Online • Kris</span>
                     </p>
                   </div>
                 </div>
@@ -776,7 +776,7 @@ export function ClientView({
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2 self-start bg-[#090612]/80 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[120px] shadow-sm ml-10"
                   >
-                    <span className="text-[10px] text-[#E0B1CB] font-medium">Krys está a escrever...</span>
+                    <span className="text-[10px] text-[#E0B1CB] font-medium">Kris está a escrever...</span>
                     <div className="flex gap-1 items-center">
                       <span className="w-1.5 h-1.5 bg-[#E0B1CB] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                       <span className="w-1.5 h-1.5 bg-[#E0B1CB] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />

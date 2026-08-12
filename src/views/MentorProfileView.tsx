@@ -37,7 +37,7 @@ interface ProfileData {
 export function MentorProfileView({ onSelectConsultation }: { onSelectConsultation: () => void }) {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<ProfileData>({
-    name: "Krys Ty Oya",
+    name: "Kris Ty Oya",
     role: "Cartomante & Orientadora de Caminhos",
     bio: "Dedicada a ouvir-te e a encontrar clareza para os teus desafios. Através das minhas cartas e da minha experiência, ajudo-te a ver o que está escondido com total sigilo e verdade.",
     quote: '"Às vezes, só precisas de alguém que veja o que o teu coração já sabe. Estou aqui para essa conversa."',
@@ -55,7 +55,7 @@ export function MentorProfileView({ onSelectConsultation }: { onSelectConsultati
           if (data.info) {
              let loadedName = data.info.name || profile.name;
              if (loadedName === 'Kris Ty Oya' || loadedName === 'Kris') {
-               loadedName = 'Krys Ty Oya';
+               loadedName = 'Kris Ty Oya';
              }
              const updated = {
                name: loadedName,

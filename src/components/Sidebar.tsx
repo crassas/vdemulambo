@@ -34,7 +34,6 @@ export function Sidebar({ isOpen, onClose, userProfile, setActiveTab }: SidebarP
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('dummyUser');
     signOut(auth).then(() => {
         window.location.reload();
     });
@@ -127,7 +126,7 @@ export function Sidebar({ isOpen, onClose, userProfile, setActiveTab }: SidebarP
                   <span>O Meu Cantinho</span>
                 </h3>
                 <div className="space-y-1.5">
-                  <SidebarItem icon={User} label="Sobre a Krys Ty Oya" onClick={() => handleNav('mentor_profile')} />
+                  <SidebarItem icon={User} label="Sobre a Kris Ty Oya" onClick={() => handleNav('mentor_profile')} />
                   <SidebarItem icon={Sparkles} label="Publicações & Trabalhos" onClick={() => handleNav('trabalhos')} />
                   <SidebarItem icon={Moon} label="Serviços & Consultas" onClick={() => handleNav('servicos')} />
                 </div>
@@ -254,7 +253,7 @@ export function Sidebar({ isOpen, onClose, userProfile, setActiveTab }: SidebarP
                 <span className="text-[10px] font-extrabold uppercase tracking-widest">{t('logout')}</span>
               </button>
               <div className="text-center space-y-1">
-                <p className="text-[8px] text-[#BE95C4]/50 uppercase tracking-[0.22em] font-semibold">Krys Ty Oya • Espaço Pessoal</p>
+                <p className="text-[8px] text-[#BE95C4]/50 uppercase tracking-[0.22em] font-semibold">Kris Ty Oya • Espaço Pessoal</p>
                 <p className="text-[7px] text-[#BE95C4]/35 font-mono">VERSÃO 1.2.0 • TOPO DE GAMA</p>
               </div>
             </div>

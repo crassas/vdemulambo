@@ -125,7 +125,7 @@ export function ServicosView({
                     ✨ Sessão Ativa Hoje ({todayAppointmentTime || 'Agendada'})
                   </span>
                   <p className="text-xs text-muted-foreground text-center mb-6 leading-relaxed">
-                    A sua sala com Krys Ty Oya está disponível.
+                    A sua sala com Kris Ty Oya está disponível.
                   </p>
                   <button 
                     onClick={onSelectConsultation}
@@ -191,7 +191,7 @@ export function ServicosView({
       {/* Footer message */}
       <div className="pt-6 text-center opacity-50">
         <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-medium">
-          Véus de Mulambo • Krys Ty Oya
+          Véus de Mulambo • Kris Ty Oya
         </p>
       </div>
     </motion.div>

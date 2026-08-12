@@ -37,7 +37,7 @@ export function AdminProfile() {
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const [profile, setProfile] = useState({
-    name: 'Krys Ty Oya • Véus de Mulambo',
+    name: 'Kris Ty Oya • Véus de Mulambo',
     role: 'Mentora • Cartomante • Orientação Pessoal',
     bio: '💃 @veus.demulambo | Cartomancia, Baralho Cigano, Leitura de Cartas e Orientação Pessoal com a força de Maria Mulambo. Atendimentos com sigilo absoluto, verdade e abertura de caminhos.',
     quote: '"A ponte para a tua clareza e paz de espírito. Orientação sincera para o teu caminho."',

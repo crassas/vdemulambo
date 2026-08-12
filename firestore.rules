@@ -2,55 +2,62 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
     function isAuthenticated() {
       return request.auth != null;
     }
-    
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
+
+    function isAdmin() {
+      return isAuthenticated()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'veusdemulambo@gmail.com';
     }
 
-    // Users collection
     match /users/{userId} {
-      allow read: if true;
-      allow write: if true;
-    }
-    
-    // Settings collection (profile, carta do dia)
-    match /settings/{document=**} {
-      allow read: if true;
-      allow write: if true;
-    }
-
-    // Appointments collection (client bookings & admin agenda)
-    match /appointments/{appointmentId} {
-      allow read, write: if true;
-    }
-
-    // Messages collection (chat with mentor)
-    match /messages/{messageId} {
-      allow read, write: if true;
+      allow read: if request.auth.uid == userId || isAdmin();
+      allow create: if request.auth.uid == userId
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == (isAdmin() ? 'admin' : 'cliente');
+      allow update: if isAdmin() || (
+        request.auth.uid == userId
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+      );
+      allow delete: if isAdmin();
     }
 
-    // Calls collection (video call sessions and WebRTC signaling)
-    match /calls/{callId} {
-      allow read, write: if true;
+    match /settings/{documentId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
-    // Posts collection (gallery feed)
     match /posts/{postId} {
-      allow read, write: if true;
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
-    // Trabalhos collection
     match /trabalhos/{trabalhoId} {
-      allow read, write: if true;
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
-    // Fallback for any other collections
-    match /{path=**} {
-      allow read, write: if true;
+    // These areas are private to signed-in users. A following migration will
+    // isolate each conversation, appointment and WebRTC session by clientUid.
+    match /appointments/{appointmentId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /messages/{messageId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /calls/{callId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

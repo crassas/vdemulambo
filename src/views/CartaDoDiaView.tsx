@@ -65,7 +65,7 @@ export function CartaDoDiaView() {
         </div>
         <h2 className="font-serif text-2xl text-cream font-bold mb-3">Tiragem Diária em Breve</h2>
         <p className="text-muted-foreground text-xs leading-relaxed">
-          A Krys Ty Oya disponibiliza a carta diariamente. Volte em breve para receber a orientação do dia.
+          A Kris Ty Oya disponibiliza a carta diariamente. Volte em breve para receber a orientação do dia.
         </p>
       </motion.div>
     );

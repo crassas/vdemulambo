@@ -168,8 +168,8 @@ export function AdminView({ onStartSession }: { onStartSession?: () => void }) {
         
         <div className="flex items-center gap-4 pr-2">
            <div className="text-right hidden sm:block">
-             <p className="text-sm font-black text-cream tracking-tight">{profile?.nome || 'Krys Ty Oya'}</p>
-             <p className="text-[10px] text-[#E0B1CB]/60 uppercase tracking-widest font-black">Krys • Em Directo</p>
+             <p className="text-sm font-black text-cream tracking-tight">{profile?.nome || 'Kris Ty Oya'}</p>
+             <p className="text-[10px] text-[#E0B1CB]/60 uppercase tracking-widest font-black">Kris • Em Directo</p>
            </div>
            {profile?.fotoPerfil ? (
              <div className="relative">

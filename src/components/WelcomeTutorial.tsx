@@ -49,7 +49,7 @@ export function WelcomeTutorial({ userProfile, onClose }: WelcomeTutorialProps) 
     {
       title: 'O Seu Cantinho',
       subtitle: 'Personalize o seu Perfil',
-      description: 'Para que a Krys Ty Oya a possa tratar sempre pelo nome e reconhecer o seu olhar a cada atendimento, dê um toque especial ao seu perfil de visitante.',
+      description: 'Para que a Kris Ty Oya a possa tratar sempre pelo nome e reconhecer o seu olhar a cada atendimento, dê um toque especial ao seu perfil de visitante.',
       icon: Heart,
       color: 'text-pink-400',
       bgColor: 'bg-pink-500/10',
