@@ -10,6 +10,7 @@ import { MentorProfileView } from './MentorProfileView';
 import { TrabalhosView } from './TrabalhosView';
 import { FaqView } from './FaqView';
 import { NotificationsView } from './NotificationsView';
+import { AppSettingsView } from './AppSettingsView';
 import { DecksSection } from '../components/DecksSection';
 import { InstagramFeed } from '../components/InstagramFeed';
 import { UserProfile } from '../hooks/useAuth';
@@ -273,32 +274,33 @@ export function ClientView({
 
   // Check if current user has a confirmed appointment TODAY
   const consulenteName = (userProfile?.nome || 'Visitante').trim().toLowerCase();
+  const isAppointmentForCurrentUser = (appointment: any) => {
+    const appointmentUid = appointment.clientUid || appointment.userUid || appointment.uid;
+    if (appointmentUid) return appointmentUid === userProfile?.uid;
+    const appointmentName = (appointment.name || '').trim().toLowerCase();
+    return Boolean(appointmentName && consulenteName !== 'visitante' && appointmentName === consulenteName);
+  };
   
   const todayAppointment = appointments.find(a => {
-    const appName = (a.name || '').trim().toLowerCase();
-    const isUserMatch = !a.name || appName.includes(consulenteName) || consulenteName.includes(appName);
-    return a.date === todayStr && (a.status === 'confirmado' || !a.status) && isUserMatch;
+    return a.date === todayStr && a.status === 'confirmado' && isAppointmentForCurrentUser(a);
   });
 
   const hasTodayAppointment = Boolean(todayAppointment);
 
   const userAppointments = appointments.filter(a => {
-    const appName = (a.name || '').trim().toLowerCase();
-    return !a.name || appName.includes(consulenteName) || consulenteName.includes(appName);
+    return isAppointmentForCurrentUser(a);
   });
 
   // User's upcoming appointments
   const upcomingAppointment = userAppointments
-    .filter(a => a.date > todayStr && (a.status === 'confirmado' || !a.status))
-    .sort((a, b) => a.date.localeCompare(b.date))[0];
+    .filter(a => a.date > todayStr && a.status === 'confirmado')
+    .sort((a, b) => `${a.date}T${a.time || '00:00'}`.localeCompare(`${b.date}T${b.time || '00:00'}`))[0];
 
   const handleStartEntry = async () => {
-    // Relaxed check for testing
-    // if (!hasTodayAppointment) {
-    //   toast.error('O acesso à sala está restrito ao dia da sua consulta agendada!');
-    //   return;
-    // }
-
+    if (!hasTodayAppointment) {
+      toast.error('O acesso à sala está restrito ao dia da sua consulta confirmada.');
+      return;
+    }
     localStorage.setItem('active_call_status', 'pending');
     localStorage.setItem('active_call_request', JSON.stringify({
       clientName: userProfile?.nome || 'Visitante',
@@ -309,6 +311,7 @@ export function ClientView({
       await setDoc(doc(db, 'calls', 'active_session'), {
         status: 'pending',
         clientName: userProfile?.nome || 'Visitante',
+        clientUid: userProfile?.uid,
         updatedAt: Date.now()
       });
     } catch (e) {
@@ -329,6 +332,7 @@ export function ClientView({
     try {
       await addDoc(collection(db, 'appointments'), {
         name: userProfile?.nome || 'Visitante',
+        clientUid: userProfile?.uid,
         type: bookType,
         date: bookDate,
         time: bookTime,
@@ -408,7 +412,7 @@ export function ClientView({
                 <motion.button 
                   whileHover={{ scale: 1.05, y: -5 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveTab('servicos')}
+                  onClick={() => setActiveTab('trabalhos')}
                   className="px-10 py-5 rounded-3xl bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] text-[#140E26] text-[11px] font-black uppercase tracking-[0.3em] transition-all cursor-pointer shadow-[0_20px_40px_rgba(197,160,89,0.2)] hover:shadow-[0_20px_50px_rgba(197,160,89,0.3)] flex items-center justify-center gap-4"
                 >
                   <Calendar className="w-4 h-4" />
@@ -491,7 +495,7 @@ export function ClientView({
                   <h3 className="text-[11px] font-black text-cream uppercase tracking-[0.4em]">Publicações & Trabalhos</h3>
                 </div>
                 <button 
-                  onClick={() => setActiveTab('servicos')}
+                  onClick={() => setActiveTab('trabalhos')}
                   className="text-[10px] font-black text-[#E0B1CB] uppercase tracking-widest hover:text-cream transition-colors"
                 >
                   Ver Todos
@@ -499,19 +503,19 @@ export function ClientView({
               </div>
               
               <HorizontalCarousel>
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('trabalhos')}
                   image="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=80"
                   title="Abertura de Caminhos"
                   duration="Rituais de Prosperidade"
                   icon={<Flame className="w-4 h-4 text-[#C5A059]" />}
                 />
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('trabalhos')}
                   image="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=400&q=80"
                   title="Alinhamento Amoroso"
                   duration="Conexão & Destino"
                   icon={<Heart className="w-4 h-4 text-rose-400" />}
                 />
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('trabalhos')}
                   image="https://images.unsplash.com/photo-1534062633719-75ea751d3824?auto=format&fit=crop&w=400&q=80"
                   title="Limpeza Espiritual"
                   duration="Purificação da Aura"
@@ -1078,10 +1082,11 @@ export function ClientView({
         return (
           <ServicosView 
             onSelectConsultation={() => setActiveTab('consultas')} 
-            onSelectChat={() => setActiveTab('mensagens')} 
             hasTodayAppointment={hasTodayAppointment}
             todayAppointmentTime={todayAppointment?.time}
+            upcomingAppointment={upcomingAppointment}
             onOpenBookingModal={() => setBookingModalOpen(true)}
+            onViewAgenda={() => setActiveTab('agenda')}
           />
         );
       case 'agenda':
@@ -1147,7 +1152,7 @@ export function ClientView({
           </motion.div>
         );
       case 'trabalhos':
-        return <TrabalhosView onSelectChat={() => setActiveTab('mensagens')} />;
+        return <TrabalhosView />;
       case 'mentor_profile':
         return <MentorProfileView onSelectConsultation={() => setActiveTab('consultas')} />;
       case 'ajuda':
@@ -1156,7 +1161,6 @@ export function ClientView({
       case 'notificacoes':
         return <NotificationsView onNavigate={setActiveTab} />;
       case 'privacidade':
-      case 'configuracoes':
         return (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -1173,6 +1177,8 @@ export function ClientView({
             </p>
           </motion.div>
         );
+      case 'configuracoes':
+        return <AppSettingsView onClearCache={handleClearCache} />;
       default:
         return null;
     }
