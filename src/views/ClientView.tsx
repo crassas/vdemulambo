@@ -27,12 +27,12 @@ interface ClientViewProps {
   setSessionStatus: (status: 'idle' | 'payment_pending' | 'payment_sent' | 'mentor_received' | 'in_session' | 'session_completed') => void;
 }
 
-export function ClientView({ 
+export function ClientView({
   activeTab,
   setActiveTab,
   userProfile,
-  sessionStatus, 
-  setSessionStatus 
+  sessionStatus,
+  setSessionStatus
 }: ClientViewProps) {
   const [reflexaoAtiva, setReflexaoAtiva] = useState("A intuição é o sussurro da alma.");
   const [isWaitingInRetention, setIsWaitingInRetention] = useState(false);
@@ -184,7 +184,7 @@ export function ClientView({
         id: doc.id,
         ...doc.data()
       })) as any[];
-      
+
       const filtered = allMsgs
         .filter(m => m.chatRoom === clientRoom || m.sender === clientRoom || m.recipient === clientRoom)
         .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
@@ -213,7 +213,7 @@ export function ClientView({
     if (!text.trim()) return;
 
     const clientRoom = userProfile?.nome || 'Visitante';
-    
+
     if (textToSend === undefined) {
       setNewMessage("");
     }
@@ -238,9 +238,9 @@ export function ClientView({
           "A abundância divina flui naturalmente. Lembre-se de agradecer pelas pequenas bênçãos hoje para atrair maiores conquistas amanhã. 🌟",
           "A sua aura está a pedir uma purificação leve. A nossa sessão de Limpeza Energética nos Serviços ajudará imenso a revitalizar. 🌿"
         ];
-        
+
         let replyText = autoReplies[Math.floor(Math.random() * autoReplies.length)];
-        
+
         if (text.toLowerCase().includes('carta') || text.toLowerCase().includes('tarot') || text.toLowerCase().includes('deitar')) {
           const cards = [
             "A Estrela ✨ (Esperança, cura espiritual e rumo protegido)",
@@ -273,7 +273,7 @@ export function ClientView({
 
   // Check if current user has a confirmed appointment TODAY
   const consulenteName = (userProfile?.nome || 'Visitante').trim().toLowerCase();
-  
+
   const todayAppointment = appointments.find(a => {
     const appName = (a.name || '').trim().toLowerCase();
     const isUserMatch = !a.name || appName.includes(consulenteName) || consulenteName.includes(appName);
@@ -356,12 +356,12 @@ export function ClientView({
       toast.error('Erro ao guardar agendamento.');
     }
   };
-  
+
   const renderContent = () => {
     switch (activeTab) {
       case 'inicio':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
@@ -373,7 +373,7 @@ export function ClientView({
               {/* Atmospheric Depth */}
               <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#9F86C0]/10 via-transparent to-transparent opacity-60 pointer-events-none" />
               <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#E0B1CB]/5 blur-[120px] rounded-full pointer-events-none" />
-              
+
               <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-10">
                 <div className="flex items-center gap-8">
                   {/* Portrait with Glowing Aura */}
@@ -381,9 +381,9 @@ export function ClientView({
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] rounded-full blur-xl opacity-30 animate-pulse" />
                     <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-[#9F86C0] via-[#E0B1CB] to-[#C5A059] shadow-2xl">
                       <div className="w-full h-full rounded-full overflow-hidden bg-[#090612] border-4 border-[#090612]">
-                        <img 
-                          src={userProfile?.fotoPerfil || "/images/avatar.png"} 
-                          alt={userProfile?.nome || 'Visitante'} 
+                        <img
+                          src={userProfile?.fotoPerfil || "/images/avatar.png"}
+                          alt={userProfile?.nome || 'Visitante'}
                           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                           referrerPolicy="no-referrer"
                         />
@@ -405,7 +405,7 @@ export function ClientView({
                   </div>
                 </div>
 
-                <motion.button 
+                <motion.button
                   whileHover={{ scale: 1.05, y: -5 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('servicos')}
@@ -419,11 +419,11 @@ export function ClientView({
 
             {/* 2. Atomic Bento Grid */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              
+
               {/* Daily Insight (8 cols) */}
               <BentoBox className="md:col-span-8 p-10 sm:p-14 flex flex-col justify-center relative bg-white/[0.01] border border-white/[0.03] overflow-hidden group">
                 <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#9F86C0]/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-[#9F86C0]/10 transition-colors" />
-                
+
                 <div className="flex items-center gap-4 mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-[#E0B1CB]/10 border border-[#E0B1CB]/20 flex items-center justify-center text-[#E0B1CB]">
                     <Sparkles className="w-6 h-6" />
@@ -433,11 +433,11 @@ export function ClientView({
                     <h4 className="text-xs font-bold text-muted-foreground/80 tracking-widest">ORIENTAÇÃO DIÁRIA</h4>
                   </div>
                 </div>
-                
+
                 <p className="font-serif italic text-2xl sm:text-4xl text-cream/90 leading-[1.4] font-medium max-w-2xl">
                   "{reflexaoAtiva}"
                 </p>
-                
+
                 <div className="absolute bottom-10 right-10 opacity-10 group-hover:opacity-20 transition-opacity">
                   <Moon className="w-32 h-32 text-cream" />
                 </div>
@@ -446,7 +446,7 @@ export function ClientView({
               {/* Quick Navigation Cards (4 cols each) */}
               <div className="md:col-span-4 flex flex-col gap-6">
                 {/* Carta do Dia */}
-                <motion.div 
+                <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
                   onClick={() => setActiveTab('carta_dia')}
                   className="flex-1 p-8 rounded-[40px] bg-gradient-to-br from-[#140E26] to-[#0C0A14] border border-white/10 group cursor-pointer relative overflow-hidden shadow-2xl"
@@ -464,7 +464,7 @@ export function ClientView({
                 </motion.div>
 
                 {/* Agenda */}
-                <motion.div 
+                <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
                   onClick={() => setActiveTab('agenda')}
                   className="flex-1 p-8 rounded-[40px] bg-gradient-to-br from-[#140E26] to-[#0C0A14] border border-white/10 group cursor-pointer relative overflow-hidden shadow-2xl"
@@ -490,28 +490,28 @@ export function ClientView({
                   <div className="w-1 h-8 bg-[#C5A059] rounded-full" />
                   <h3 className="text-[11px] font-black text-cream uppercase tracking-[0.4em]">Publicações & Trabalhos</h3>
                 </div>
-                <button 
+                <button
                   onClick={() => setActiveTab('servicos')}
                   className="text-[10px] font-black text-[#E0B1CB] uppercase tracking-widest hover:text-cream transition-colors"
                 >
                   Ver Todos
                 </button>
               </div>
-              
+
               <HorizontalCarousel>
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('servicos')}
                   image="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=80"
                   title="Abertura de Caminhos"
                   duration="Rituais de Prosperidade"
                   icon={<Flame className="w-4 h-4 text-[#C5A059]" />}
                 />
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('servicos')}
                   image="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=400&q=80"
                   title="Alinhamento Amoroso"
                   duration="Conexão & Destino"
                   icon={<Heart className="w-4 h-4 text-rose-400" />}
                 />
-                <SessaoCard onClick={() => setActiveTab('servicos')} 
+                <SessaoCard onClick={() => setActiveTab('servicos')}
                   image="https://images.unsplash.com/photo-1534062633719-75ea751d3824?auto=format&fit=crop&w=400&q=80"
                   title="Limpeza Espiritual"
                   duration="Purificação da Aura"
@@ -524,14 +524,14 @@ export function ClientView({
             <section className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
               <DecksSection onSelectConsultation={() => setActiveTab('servicos')} />
               <div className="flex flex-col justify-end">
-                 <InstagramFeed />
+                <InstagramFeed />
               </div>
             </section>
           </motion.div>
         );
       case 'consultas':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
@@ -539,11 +539,11 @@ export function ClientView({
           >
             {/* Consultations Bento Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-[minmax(140px,auto)]">
-              
+
               {/* Main Booking Block (Large 4x2) */}
               <BentoBox className="col-span-2 md:col-span-4 row-span-2 p-8 flex flex-col items-center justify-center text-center relative overflow-hidden bg-white/[0.04] border border-white/10 rounded-[28px] shadow-2xl">
                 <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-transparent via-[#9F86C0] to-transparent opacity-50" />
-                
+
                 {hasTodayAppointment ? (
                   /* Today is appointment day! Unlocked room */
                   <div className="flex flex-col items-center animate-in fade-in zoom-in duration-500 w-full max-w-md">
@@ -557,9 +557,9 @@ export function ClientView({
                     <p className="text-xs text-muted-foreground mb-6 max-w-sm leading-relaxed">
                       O seu horário reservado com Kris Ty Oya está ativo. Clique abaixo para solicitar a entrada direta na sala privada de videochamada.
                     </p>
-                    
+
                     {sessionStatus === 'idle' && (
-                      <button 
+                      <button
                         onClick={handleStartEntry}
                         className="w-full text-xs flex justify-center items-center gap-2 py-4 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] font-bold rounded-full transition-all shadow-xl shadow-[#9F86C0]/25 cursor-pointer"
                       >
@@ -571,7 +571,7 @@ export function ClientView({
                     {sessionStatus === 'session_completed' && (
                       <div className="flex flex-col items-center w-full max-w-sm">
                         <p className="text-xs text-emerald-400 font-bold mb-4">Sessão de hoje concluída com sucesso!</p>
-                        <button 
+                        <button
                           onClick={() => {
                             setSessionStatus('idle');
                             setActiveTab('trabalhos');
@@ -593,7 +593,7 @@ export function ClientView({
                       Entrada Restrita ao Dia Agendado
                     </span>
                     <h3 className="font-serif text-2xl text-foreground mb-2">Sala de Videochamada Fechada</h3>
-                    
+
                     {upcomingAppointment ? (
                       <div className="bg-white/[0.02] p-4 rounded-[20px] border border-white/10 mb-6 text-left w-full">
                         <p className="text-xs font-semibold text-[#E0B1CB] mb-1 flex items-center gap-1.5">
@@ -612,7 +612,7 @@ export function ClientView({
                       </p>
                     )}
 
-                    <button 
+                    <button
                       onClick={() => setBookingModalOpen(true)}
                       className="w-full text-xs flex justify-center items-center gap-2 py-3.5 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] font-bold rounded-full transition-all shadow-[0_0_15px_rgba(159,134,192,0.3)] cursor-pointer"
                     >
@@ -624,10 +624,10 @@ export function ClientView({
               </BentoBox>
 
               {/* Tarot Expresso (2x1) */}
-              <ConsultationOption 
-                title="Tarot Expresso" 
-                desc="Resposta via áudio." 
-                icon={<Moon className="w-5 h-5 text-[#E0B1CB]" />} 
+              <ConsultationOption
+                title="Tarot Expresso"
+                desc="Resposta via áudio."
+                icon={<Moon className="w-5 h-5 text-[#E0B1CB]" />}
                 className="col-span-2"
                 onClick={() => setActiveTab("mensagens")}
               />
@@ -647,7 +647,7 @@ export function ClientView({
         );
       case 'mensagens':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
@@ -655,7 +655,7 @@ export function ClientView({
           >
             {/* Dating App Inspired Chat Screen */}
             <div className="flex flex-col h-[580px] rounded-[32px] overflow-hidden bg-white/[0.04] border border-white/10 shadow-2xl relative">
-              
+
               {/* Soft decorative background glow */}
               <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#9F86C0]/10 blur-[100px] rounded-full pointer-events-none" />
               <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-[#E0B1CB]/10 blur-[100px] rounded-full pointer-events-none" />
@@ -666,10 +666,10 @@ export function ClientView({
                   {/* Glowing Pulse Avatar */}
                   <div className="relative">
                     <div className="w-11 h-11 rounded-full overflow-hidden border border-[#9F86C0]/40 bg-[#9F86C0]/10 shadow-lg shadow-[#9F86C0]/10">
-                      <img 
-                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80" 
-                        alt="Kris Ty Oya" 
-                        className="w-full h-full object-cover" 
+                      <img
+                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
+                        alt="Kris Ty Oya"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-[#090612] rounded-full animate-pulse" />
@@ -687,7 +687,7 @@ export function ClientView({
 
                 {/* Header Action Buttons */}
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => {
                       toast.success("A iniciar chamada de áudio privada...");
                       setActiveTab('consultas');
@@ -697,7 +697,7 @@ export function ClientView({
                   >
                     <Phone className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       toast.success("A iniciar chamada de vídeo...");
                       setActiveTab('consultas');
@@ -707,7 +707,7 @@ export function ClientView({
                   >
                     <Video className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       setSessionStatus('session_completed');
                       toast.success("Consulta finalizada com sucesso!");
@@ -743,21 +743,20 @@ export function ClientView({
                       {/* Mentor Icon for Received Messages */}
                       {isMentor && (
                         <div className="w-8 h-8 rounded-full overflow-hidden border border-[#9F86C0]/20 bg-[#9F86C0]/5 shrink-0 hidden sm:block">
-                          <img 
-                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" 
-                            alt="Kris" 
+                          <img
+                            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80"
+                            alt="Kris"
                             className="w-full h-full object-cover"
                           />
                         </div>
                       )}
 
                       <div>
-                        <div 
-                          className={`p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md ${
-                            isMentor 
-                              ? 'bg-[#090612]/80 border border-white/10 text-foreground rounded-tl-none' 
-                              : 'bg-gradient-to-tr from-[#9F86C0] via-[#9F86C0]/70 to-[#E0B1CB]/25 border border-[#9F86C0]/30 text-white rounded-tr-none'
-                          }`}
+                        <div
+                          className={`p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md ${isMentor
+                            ? 'bg-[#090612]/80 border border-white/10 text-foreground rounded-tl-none'
+                            : 'bg-gradient-to-tr from-[#9F86C0] via-[#9F86C0]/70 to-[#E0B1CB]/25 border border-[#9F86C0]/30 text-white rounded-tr-none'
+                            }`}
                         >
                           <p className="whitespace-pre-line">{msg.text}</p>
                         </div>
@@ -771,7 +770,7 @@ export function ClientView({
 
                 {/* Bouncing Typing Indicator */}
                 {isTyping && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2 self-start bg-[#090612]/80 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[120px] shadow-sm ml-10"
@@ -795,8 +794,8 @@ export function ClientView({
                   { text: "Conselho para Hoje 🌌", icon: "🌌" },
                   { text: "Fazer uma Limpeza 🌿", icon: "🌿" }
                 ].map((item, idx) => (
-                  <button 
-                    key={idx} 
+                  <button
+                    key={idx}
                     onClick={() => handleSendMessage(item.text)}
                     className="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-[#9F86C0]/20 border border-white/10 text-foreground/90 hover:text-[#E0B1CB] text-[11px] font-medium transition-all duration-300 hover:scale-102 flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
                   >
@@ -807,7 +806,7 @@ export function ClientView({
 
               {/* Chat Input Capsule Bar */}
               <div className="p-4 sm:p-5 shrink-0 relative z-10">
-                <form 
+                <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     handleSendMessage();
@@ -819,7 +818,7 @@ export function ClientView({
                     rows={2}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Mentalize e pergunte..." 
+                    placeholder="Mentalize e pergunte..."
                     className="w-full bg-transparent border-none text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none resize-none px-1"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
@@ -828,12 +827,12 @@ export function ClientView({
                       }
                     }}
                   />
-                  
+
                   {/* Action row */}
                   <div className="flex items-center justify-between border-t border-white/5 pt-3">
                     {/* Left controls */}
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         type="button"
                         onClick={() => handleSendMessage("Como vai o meu Amor? ❤️")}
                         className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-[#E0B1CB] transition-all flex items-center justify-center border border-white/5 cursor-pointer active:scale-95"
@@ -841,8 +840,8 @@ export function ClientView({
                       >
                         <Heart className="w-4 h-4 text-red-400" />
                       </button>
-                      
-                      <button 
+
+                      <button
                         type="button"
                         onClick={() => handleSendMessage("Quero tirar uma carta de Tarot, por favor! 🔮")}
                         className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-[#E0B1CB] transition-all flex items-center justify-center border border-white/5 cursor-pointer active:scale-95"
@@ -851,7 +850,7 @@ export function ClientView({
                         <Sparkles className="w-4 h-4 text-amber-300" />
                       </button>
 
-                      <button 
+                      <button
                         type="button"
                         onClick={() => handleSendMessage("Fazer uma Limpeza Energética 🌿")}
                         className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-[#E0B1CB] transition-all flex items-center gap-1.5 border border-white/5 text-[11px] font-semibold cursor-pointer active:scale-95"
@@ -862,7 +861,7 @@ export function ClientView({
                     </div>
 
                     {/* Right send button */}
-                    <button 
+                    <button
                       type="submit"
                       className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 flex items-center justify-center text-slate-950 font-bold transition-all shadow-[0_0_18px_rgba(159,134,192,0.5)] active:scale-95 shrink-0 cursor-pointer"
                       title="Enviar Mensagem"
@@ -877,7 +876,7 @@ export function ClientView({
         );
       case 'rituais':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
@@ -907,178 +906,178 @@ export function ClientView({
         );
       case 'perfil':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <BentoBox className="md:col-span-5 lg:col-span-4 p-6 text-center flex flex-col items-center justify-center bg-white/[0.04] border border-white/10 rounded-[28px] shadow-2xl relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#9F86C0]/5 to-transparent opacity-50" />
-                  <div 
-                    onClick={() => profileInputRef.current?.click()} 
-                    className="relative mb-4 cursor-pointer"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] rounded-full blur-md opacity-25 group-hover:opacity-40 transition-opacity" />
-                    <div className="relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-[#9F86C0] via-[#E0B1CB] to-[#C5A059] shadow-md transition-transform duration-300 group-hover:scale-105">
-                      <div className="w-full h-full rounded-full overflow-hidden bg-[#090612] border-4 border-[#140E26] flex items-center justify-center relative">
-                        {userProfile?.fotoPerfil ? (
-                          <>
-                            <img 
-                              src={userProfile.fotoPerfil} 
-                              alt={userProfile.nome || 'Cliente'} 
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                                const fallback = e.currentTarget.parentElement?.querySelector('.fallback-icon');
-                                if (fallback) fallback.classList.remove('hidden');
-                              }}
-                            />
-                            <User className="w-10 h-10 text-[#E0B1CB]/60 hidden fallback-icon" />
-                          </>
-                        ) : (
-                          <User className="w-10 h-10 text-[#E0B1CB]/60" />
-                        )}
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1 transition-opacity duration-300">
-                          <Camera className="w-5 h-5 text-[#E0B1CB]" />
-                          <span className="text-[8px] uppercase tracking-wider text-[#E0B1CB] font-bold">Alterar</span>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <BentoBox className="md:col-span-5 lg:col-span-4 p-6 text-center flex flex-col items-center justify-center bg-white/[0.04] border border-white/10 rounded-[28px] shadow-2xl relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#9F86C0]/5 to-transparent opacity-50" />
+                <div
+                  onClick={() => profileInputRef.current?.click()}
+                  className="relative mb-4 cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] rounded-full blur-md opacity-25 group-hover:opacity-40 transition-opacity" />
+                  <div className="relative w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-[#9F86C0] via-[#E0B1CB] to-[#C5A059] shadow-md transition-transform duration-300 group-hover:scale-105">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-[#090612] border-4 border-[#140E26] flex items-center justify-center relative">
+                      {userProfile?.fotoPerfil ? (
+                        <>
+                          <img
+                            src={userProfile.fotoPerfil}
+                            alt={userProfile.nome || 'Cliente'}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              const fallback = e.currentTarget.parentElement?.querySelector('.fallback-icon');
+                              if (fallback) fallback.classList.remove('hidden');
+                            }}
+                          />
+                          <User className="w-10 h-10 text-[#E0B1CB]/60 hidden fallback-icon" />
+                        </>
+                      ) : (
+                        <User className="w-10 h-10 text-[#E0B1CB]/60" />
+                      )}
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1 transition-opacity duration-300">
+                        <Camera className="w-5 h-5 text-[#E0B1CB]" />
+                        <span className="text-[8px] uppercase tracking-wider text-[#E0B1CB] font-bold">Alterar</span>
                       </div>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] rounded-full border-2 border-[#140E26] flex items-center justify-center shadow-md">
-                      <Camera className="w-3.5 h-3.5 text-[#140E26]" />
-                    </div>
                   </div>
-                  <h3 className="text-xl font-serif text-cream mb-1 font-bold">{userProfile?.nome || 'Visitante'}</h3>
-                  <p className="text-[9px] text-[#E0B1CB] uppercase tracking-widest font-bold">Membro desde Julho 2024</p>
-                  
-                  <input 
-                    type="file" 
-                    ref={profileInputRef} 
-                    onChange={handleProfilePhotoChange} 
-                    accept="image/*" 
-                    className="hidden" 
-                  />
-                </BentoBox>
-                
-                <div className="md:col-span-7 lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-4 auto-rows-fr">
-                   <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
-                      <Calendar className="w-5 h-5 text-emerald-400 mb-2" />
-                      <p className="text-2xl font-serif text-foreground mb-1 font-bold">12</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Consultas</p>
-                   </BentoBox>
-                   <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
-                      <Flame className="w-5 h-5 text-orange-400 mb-2" />
-                      <p className="text-2xl font-serif text-foreground mb-1 font-bold">4</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Sessões</p>
-                   </BentoBox>
-                   <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
-                      <Moon className="w-5 h-5 text-[#E0B1CB] mb-2" />
-                      <p className="text-2xl font-serif text-foreground mb-1 font-bold">3</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Cartas Tiradas</p>
-                   </BentoBox>
-                   <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
-                      <Zap className="w-5 h-5 text-yellow-400 mb-2" />
-                      <p className="text-[10px] font-bold text-foreground mb-1 mt-2">Nível 2</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Iniciado</p>
-                   </BentoBox>
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] rounded-full border-2 border-[#140E26] flex items-center justify-center shadow-md">
+                    <Camera className="w-3.5 h-3.5 text-[#140E26]" />
+                  </div>
                 </div>
-             </div>
-             <BentoBox className="p-6 bg-white/[0.04] border border-white/10 rounded-[28px] shadow-2xl">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#E0B1CB] mb-4">Avisos e Configurações</h3>
-                <div className="space-y-2">
-                   <button 
-                     onClick={() => {
-                       setEditName(userProfile?.nome || '');
-                       setIsEditingDetails(true);
-                     }}
-                     className="w-full flex items-center justify-between p-3 rounded-xl bg-[#090612]/40 hover:bg-[#9F86C0]/10 border border-white/5 hover:border-[#9F86C0]/20 transition-all text-left cursor-pointer"
-                   >
-                     <span className="text-xs text-muted-foreground">Alterar Dados Pessoais</span>
-                     <User className="w-4 h-4 text-muted-foreground" />
-                   </button>
-                   <button className="w-full flex items-center justify-between p-3 rounded-xl bg-[#090612]/40 hover:bg-[#9F86C0]/10 border border-white/5 hover:border-[#9F86C0]/20 transition-all text-left cursor-pointer">
-                     <span className="text-xs text-muted-foreground">Definições de Notificações</span>
-                     <Bell className="w-4 h-4 text-muted-foreground" />
-                   </button>
-                   <button 
-                     onClick={handleClearCache}
-                     disabled={isClearingCache}
-                     className="w-full flex items-center justify-between p-3 rounded-xl bg-[#E0B1CB]/5 hover:bg-[#E0B1CB]/15 border border-[#E0B1CB]/10 hover:border-[#E0B1CB]/30 transition-all text-left cursor-pointer disabled:opacity-50"
-                   >
-                     <span className="text-xs text-[#E0B1CB] font-semibold">Limpar Cache & Sincronizar</span>
-                     <RefreshCw className={`w-4 h-4 text-[#E0B1CB] ${isClearingCache ? 'animate-spin' : ''}`} />
-                   </button>
-                </div>
-             </BentoBox>
+                <h3 className="text-xl font-serif text-cream mb-1 font-bold">{userProfile?.nome || 'Visitante'}</h3>
+                <p className="text-[9px] text-[#E0B1CB] uppercase tracking-widest font-bold">Membro desde Julho 2024</p>
 
-             {/* Personal Details Editing Modal */}
-             <AnimatePresence>
-               {isEditingDetails && (
-                 <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-                   <div className="absolute inset-0 bg-[#090612]/85 backdrop-blur-md" onClick={() => setIsEditingDetails(false)} />
-                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.95 }}
-                     animate={{ opacity: 1, scale: 1 }}
-                     exit={{ opacity: 0, scale: 0.95 }}
-                     className="relative w-full max-w-sm bg-[#140E26] border border-white/10 p-8 rounded-[2rem] shadow-2xl z-10 space-y-5"
-                   >
-                     <button 
-                       onClick={() => setIsEditingDetails(false)}
-                       className="absolute top-5 right-5 text-muted-foreground hover:text-foreground cursor-pointer"
-                     >
-                       <X className="w-4 h-4" />
-                     </button>
-                     <div className="text-center pb-2">
-                       <h3 className="font-serif text-2xl text-cream font-bold">Dados Pessoais</h3>
-                       <p className="text-xs text-cream/60 mt-1">Como a queríamos tratar no espaço?</p>
-                     </div>
-                     
-                     <form onSubmit={handleSaveDetails} className="space-y-5">
-                       <div className="space-y-2">
-                         <label className="text-[10px] font-black uppercase tracking-widest text-[#E0B1CB]">Nome ou Pseudónimo</label>
-                         <input 
-                           type="text"
-                           value={editName}
-                           onChange={(e) => setEditName(e.target.value)}
-                           className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-cream text-sm focus:outline-none focus:border-[#E0B1CB]/40 focus:bg-white/[0.05]"
-                           placeholder="Visitante"
-                           required
-                         />
-                       </div>
-                       
-                       <div className="flex gap-3 pt-2">
-                         <button 
-                           type="button"
-                           onClick={() => setIsEditingDetails(false)}
-                           className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-[10px] uppercase tracking-widest font-black text-cream hover:bg-white/5 transition-colors cursor-pointer"
-                         >
-                           Cancelar
-                         </button>
-                         <button 
-                           type="submit"
-                           disabled={isSavingDetails}
-                           className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] text-[#140E26] text-[10px] uppercase tracking-widest font-black hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
-                         >
-                           Guardar
-                         </button>
-                       </div>
-                     </form>
-                   </motion.div>
-                 </div>
-               )}
-             </AnimatePresence>
+                <input
+                  type="file"
+                  ref={profileInputRef}
+                  onChange={handleProfilePhotoChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </BentoBox>
+
+              <div className="md:col-span-7 lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-4 auto-rows-fr">
+                <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
+                  <Calendar className="w-5 h-5 text-emerald-400 mb-2" />
+                  <p className="text-2xl font-serif text-foreground mb-1 font-bold">12</p>
+                  <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Consultas</p>
+                </BentoBox>
+                <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
+                  <Flame className="w-5 h-5 text-orange-400 mb-2" />
+                  <p className="text-2xl font-serif text-foreground mb-1 font-bold">4</p>
+                  <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Sessões</p>
+                </BentoBox>
+                <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
+                  <Moon className="w-5 h-5 text-[#E0B1CB] mb-2" />
+                  <p className="text-2xl font-serif text-foreground mb-1 font-bold">3</p>
+                  <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Cartas Tiradas</p>
+                </BentoBox>
+                <BentoBox className="p-4 flex flex-col items-center justify-center text-center bg-white/[0.04] border border-white/10 rounded-[24px] shadow-lg">
+                  <Zap className="w-5 h-5 text-yellow-400 mb-2" />
+                  <p className="text-[10px] font-bold text-foreground mb-1 mt-2">Nível 2</p>
+                  <p className="text-[9px] text-muted-foreground uppercase tracking-widest">Iniciado</p>
+                </BentoBox>
+              </div>
+            </div>
+            <BentoBox className="p-6 bg-white/[0.04] border border-white/10 rounded-[28px] shadow-2xl">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#E0B1CB] mb-4">Avisos e Configurações</h3>
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setEditName(userProfile?.nome || '');
+                    setIsEditingDetails(true);
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-[#090612]/40 hover:bg-[#9F86C0]/10 border border-white/5 hover:border-[#9F86C0]/20 transition-all text-left cursor-pointer"
+                >
+                  <span className="text-xs text-muted-foreground">Alterar Dados Pessoais</span>
+                  <User className="w-4 h-4 text-muted-foreground" />
+                </button>
+                <button className="w-full flex items-center justify-between p-3 rounded-xl bg-[#090612]/40 hover:bg-[#9F86C0]/10 border border-white/5 hover:border-[#9F86C0]/20 transition-all text-left cursor-pointer">
+                  <span className="text-xs text-muted-foreground">Definições de Notificações</span>
+                  <Bell className="w-4 h-4 text-muted-foreground" />
+                </button>
+                <button
+                  onClick={handleClearCache}
+                  disabled={isClearingCache}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-[#E0B1CB]/5 hover:bg-[#E0B1CB]/15 border border-[#E0B1CB]/10 hover:border-[#E0B1CB]/30 transition-all text-left cursor-pointer disabled:opacity-50"
+                >
+                  <span className="text-xs text-[#E0B1CB] font-semibold">Limpar Cache & Sincronizar</span>
+                  <RefreshCw className={`w-4 h-4 text-[#E0B1CB] ${isClearingCache ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+            </BentoBox>
+
+            {/* Personal Details Editing Modal */}
+            <AnimatePresence>
+              {isEditingDetails && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                  <div className="absolute inset-0 bg-[#090612]/85 backdrop-blur-md" onClick={() => setIsEditingDetails(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="relative w-full max-w-sm bg-[#140E26] border border-white/10 p-8 rounded-[2rem] shadow-2xl z-10 space-y-5"
+                  >
+                    <button
+                      onClick={() => setIsEditingDetails(false)}
+                      className="absolute top-5 right-5 text-muted-foreground hover:text-foreground cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <div className="text-center pb-2">
+                      <h3 className="font-serif text-2xl text-cream font-bold">Dados Pessoais</h3>
+                      <p className="text-xs text-cream/60 mt-1">Como a queríamos tratar no espaço?</p>
+                    </div>
+
+                    <form onSubmit={handleSaveDetails} className="space-y-5">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[#E0B1CB]">Nome ou Pseudónimo</label>
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-cream text-sm focus:outline-none focus:border-[#E0B1CB]/40 focus:bg-white/[0.05]"
+                          placeholder="Visitante"
+                          required
+                        />
+                      </div>
+
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsEditingDetails(false)}
+                          className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-[10px] uppercase tracking-widest font-black text-cream hover:bg-white/5 transition-colors cursor-pointer"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSavingDetails}
+                          className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#E0B1CB] text-[#140E26] text-[10px] uppercase tracking-widest font-black hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+                        >
+                          Guardar
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
           </motion.div>
         );
       case 'carta_dia':
         return <CartaDoDiaView />;
       case 'servicos':
         return (
-          <ServicosView 
-            onSelectConsultation={() => setActiveTab('consultas')} 
-            onSelectChat={() => setActiveTab('mensagens')} 
+          <ServicosView
+            onSelectConsultation={() => setActiveTab('consultas')}
+            onSelectChat={() => setActiveTab('mensagens')}
             hasTodayAppointment={hasTodayAppointment}
             todayAppointmentTime={todayAppointment?.time}
             onOpenBookingModal={() => setBookingModalOpen(true)}
@@ -1086,7 +1085,7 @@ export function ClientView({
         );
       case 'agenda':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -1099,14 +1098,14 @@ export function ClientView({
                   Acompanhe as suas marcações e agende novas consultas com Kris Ty Oya.
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => setBookingModalOpen(true)}
                 className="px-5 py-3.5 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] text-xs font-bold uppercase tracking-widest rounded-full transition-all cursor-pointer shadow-[0_0_12px_rgba(159,134,192,0.25)] flex items-center gap-2 shrink-0"
               >
                 <Plus className="w-4 h-4 text-[#140E26]" /> Nova Marcação
               </button>
             </div>
-            
+
             <div className="flex flex-col gap-4">
               <h3 className="text-xs font-bold uppercase tracking-widest text-[#E0B1CB] flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#E0B1CB]" /> As Minhas Consultas Reservadas
@@ -1119,7 +1118,7 @@ export function ClientView({
                   <p className="text-xs text-muted-foreground max-w-sm">
                     Escolha o melhor dia e horário para conversar com Kris Ty Oya.
                   </p>
-                  <button 
+                  <button
                     onClick={() => setBookingModalOpen(true)}
                     className="px-6 py-3.5 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] text-xs font-bold uppercase tracking-widest rounded-full transition-all cursor-pointer shadow-[0_0_12px_rgba(159,134,192,0.25)] mt-2"
                   >
@@ -1131,13 +1130,13 @@ export function ClientView({
                   {userAppointments.map((app) => {
                     const isToday = app.date === todayStr;
                     return (
-                      <AppointmentCard 
+                      <AppointmentCard
                         key={app.id}
-                        date={isToday ? 'HOJE' : app.date} 
-                        time={app.time} 
-                        type={app.type} 
-                        status={isToday ? 'Confirmado (HOJE)' : (app.status || 'Confirmado')} 
-                        onClick={() => setActiveTab(isToday ? 'consultas' : 'agenda')} 
+                        date={isToday ? 'HOJE' : app.date}
+                        time={app.time}
+                        type={app.type}
+                        status={isToday ? 'Confirmado (HOJE)' : (app.status || 'Confirmado')}
+                        onClick={() => setActiveTab(isToday ? 'consultas' : 'agenda')}
                       />
                     );
                   })}
@@ -1158,7 +1157,7 @@ export function ClientView({
       case 'privacidade':
       case 'configuracoes':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="min-h-[400px] flex flex-col items-center justify-center text-center p-12 glass-mystic rounded-[2rem]"
@@ -1168,7 +1167,7 @@ export function ClientView({
             </div>
             <h2 className="text-3xl font-serif text-foreground mb-4">Em Breve</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Esta secção da plataforma está a ser preparada. 
+              Esta secção da plataforma está a ser preparada.
               Em breve, novas publicações serão aqui partilhadas.
             </p>
           </motion.div>
@@ -1202,7 +1201,7 @@ export function ClientView({
         <span className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
         {getTitle()}
       </h2>
-      
+
       <AnimatePresence mode="wait">
         {renderContent()}
       </AnimatePresence>
@@ -1229,7 +1228,7 @@ export function ClientView({
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-[#090612]/95 border border-white/10 p-6 sm:p-8 rounded-[28px] w-full max-w-md shadow-2xl relative space-y-6"
             >
-              <button 
+              <button
                 onClick={() => setBookingModalOpen(false)}
                 className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
@@ -1251,7 +1250,7 @@ export function ClientView({
                   <label className="block text-[10px] uppercase tracking-widest text-[#E0B1CB] font-bold mb-1.5">
                     Tipo de Atendimento
                   </label>
-                  <select 
+                  <select
                     value={bookType}
                     onChange={(e) => setBookType(e.target.value)}
                     className="w-full bg-[#090612]/60 border border-white/10 rounded-[20px] px-4 py-3.5 text-foreground text-sm focus:border-[#9F86C0]/50 outline-none cursor-pointer"
@@ -1268,7 +1267,7 @@ export function ClientView({
                     <label className="block text-[10px] uppercase tracking-widest text-[#E0B1CB] font-bold mb-1.5">
                       Data
                     </label>
-                    <input 
+                    <input
                       type="date"
                       value={bookDate}
                       min={todayStr}
@@ -1282,7 +1281,7 @@ export function ClientView({
                     <label className="block text-[10px] uppercase tracking-widest text-[#E0B1CB] font-bold mb-1.5">
                       Hora
                     </label>
-                    <input 
+                    <input
                       type="time"
                       value={bookTime}
                       onChange={(e) => setBookTime(e.target.value)}
@@ -1299,7 +1298,7 @@ export function ClientView({
                   </span>
                 </div>
 
-                <button 
+                <button
                   type="submit"
                   className="w-full py-4 bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] hover:brightness-110 text-[#140E26] text-xs font-bold uppercase tracking-widest rounded-full transition-all cursor-pointer shadow-[0_0_12px_rgba(159,134,192,0.25)] flex items-center justify-center gap-2 mt-2"
                 >
@@ -1321,7 +1320,7 @@ function SessaoCard({ image, title, duration, icon, onClick }: { image: string, 
       <div className="relative overflow-hidden h-[340px] rounded-[32px] border border-white/10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] transition-all duration-500 hover:shadow-[0_20px_50px_-10px_rgba(224,177,203,0.15)] hover:border-[#E0B1CB]/30">
         <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#090612] via-[#090612]/60 to-transparent" />
-        
+
         <div className="absolute top-4 right-4 p-3 rounded-2xl bg-[#090612]/40 backdrop-blur-md border border-white/10 shadow-lg text-[#E0B1CB]">
           {icon}
         </div>
@@ -1333,7 +1332,7 @@ function SessaoCard({ image, title, duration, icon, onClick }: { image: string, 
           <h4 className="font-serif text-2xl font-bold text-cream mb-4 group-hover:text-[#E0B1CB] transition-colors leading-tight">
             {title}
           </h4>
-          
+
           <button className="w-full py-3.5 bg-white/5 group-hover:bg-[#E0B1CB]/10 rounded-2xl text-xs font-bold tracking-widest text-[#E0B1CB] border border-white/10 group-hover:border-[#E0B1CB]/30 transition-all uppercase shadow-md flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md">
             <span>Saber Mais</span>
             <Sparkles className="w-3.5 h-3.5" />
@@ -1351,14 +1350,13 @@ function AppointmentCard({ date, time, type, status, onClick }: { key?: string, 
       <div className="relative overflow-hidden p-6 bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 rounded-[32px] group hover:border-[#9F86C0]/40 transition-all duration-300 shadow-2xl">
         {/* Decorative corner accent */}
         <div className="absolute -top-12 -right-12 w-24 h-24 bg-[#9F86C0]/20 rounded-full blur-2xl" />
-        
+
         <div className="flex justify-between items-start mb-6">
           <div className="p-3 rounded-2xl bg-[#9F86C0]/10 text-[#E0B1CB] border border-[#9F86C0]/20 group-hover:scale-110 transition-transform">
             <Calendar className="w-5 h-5" />
           </div>
-          <span className={`text-[9px] font-extrabold uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full border shadow-sm ${
-            isConfirmed ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-[#E0B1CB]/10 border-[#E0B1CB]/20 text-[#E0B1CB]'
-          }`}>
+          <span className={`text-[9px] font-extrabold uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full border shadow-sm ${isConfirmed ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-[#E0B1CB]/10 border-[#E0B1CB]/20 text-[#E0B1CB]'
+            }`}>
             {status}
           </span>
         </div>
@@ -1386,7 +1384,7 @@ function AppointmentCard({ date, time, type, status, onClick }: { key?: string, 
 
 function QuickCard({ label, icon, onClick }: { label: string, icon: React.ReactNode, onClick?: () => void }) {
   return (
-    <BentoBox 
+    <BentoBox
       onClick={onClick}
       className="p-6 bg-white/[0.04] border border-white/10 rounded-[24px] flex flex-col items-center justify-center text-center gap-3 group cursor-pointer hover:border-[#9F86C0]/50 transition-all shadow-lg"
     >
@@ -1419,17 +1417,17 @@ function ProductCard({ title, price, finalPrice, shippingMethod, setShippingMeth
         <h3 className="font-serif text-2xl font-bold mb-1 text-foreground">{title}</h3>
         <p className="text-[#E0B1CB] text-xs font-bold uppercase tracking-widest">A combinar</p>
       </div>
-      
+
       <div className="mt-auto space-y-4">
         <div className="flex bg-[#090612]/80 rounded-full p-1 border border-white/5">
-          <button 
+          <button
             type="button"
             onClick={() => setShippingMethod('mao')}
             className={`flex-1 py-3 text-xs font-bold rounded-full transition-all ${shippingMethod === 'mao' ? 'bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] text-[#140E26] shadow-md' : 'text-muted-foreground hover:text-white'}`}
           >
             Em Mão
           </button>
-          <button 
+          <button
             type="button"
             onClick={() => setShippingMethod('ctt')}
             className={`flex-1 py-3 text-xs font-bold rounded-full transition-all ${shippingMethod === 'ctt' ? 'bg-gradient-to-tr from-[#9F86C0] to-[#E0B1CB] text-[#140E26] shadow-md' : 'text-muted-foreground hover:text-white'}`}
