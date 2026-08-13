@@ -12,7 +12,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     { id: 'carta_dia', label: 'Carta', icon: Moon },
     { id: 'trabalhos', label: 'Trabalhos', icon: Sparkles },
     { id: 'agenda', label: 'Agenda', icon: Calendar },
-    { id: 'mentor_profile', label: 'Perfil', icon: User },
+    { id: 'perfil', label: 'Perfil', icon: User },
   ];
 
   return (

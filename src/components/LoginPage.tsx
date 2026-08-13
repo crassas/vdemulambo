@@ -5,6 +5,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   updateProfile,
 } from 'firebase/auth';
 import {
@@ -23,6 +24,13 @@ import toast from 'react-hot-toast';
 import { auth, googleProvider } from '../lib/firebase';
 
 type AuthMode = 'login' | 'register';
+
+function shouldUseGoogleRedirect() {
+  const isEmbedded = window.self !== window.top;
+  const isMobile = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  return isEmbedded || isMobile;
+}
 
 function authErrorMessage(code?: string) {
   switch (code) {
@@ -62,8 +70,22 @@ export function LoginPage({ onBack }: { selectedRole?: 'cliente' | 'admin'; onBa
     setIsLoading(true);
     resetFeedback();
     try {
-      await signInWithPopup(auth, googleProvider);
-      toast.success('Sessão iniciada com Google.');
+      if (shouldUseGoogleRedirect()) {
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
+
+      try {
+        await signInWithPopup(auth, googleProvider);
+        toast.success('Sessão iniciada com Google.');
+      } catch (err: any) {
+        if (err?.code === 'auth/popup-blocked' || err?.code === 'auth/popup-closed-by-user') {
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        }
+
+        throw err;
+      }
     } catch (err: any) {
       setError(authErrorMessage(err?.code));
     } finally {

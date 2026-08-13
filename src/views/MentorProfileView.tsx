@@ -209,7 +209,7 @@ export function MentorProfileView({ onSelectConsultation }: { onSelectConsultati
       </section>
 
       {/* 2. Core Stats Bar (Compact) */}
-      <section className="grid grid-cols-3 gap-3">
+      <section className="hidden">
         {[
           { value: "+10 Anos", label: "Experiência", icon: Award },
           { value: "+5.000", label: "Vidas", icon: Heart },
@@ -280,7 +280,7 @@ export function MentorProfileView({ onSelectConsultation }: { onSelectConsultati
         </div>
 
         {/* Contacts */}
-        <div className="p-6 rounded-[32px] bg-white/[0.015] border border-white/5 space-y-5 flex flex-col justify-between">
+        <div className="hidden">
           <div>
             <h3 className="font-serif text-lg font-bold text-cream mb-4">Fala Comigo</h3>
             <div className="space-y-4">
@@ -316,7 +316,7 @@ export function MentorProfileView({ onSelectConsultation }: { onSelectConsultati
       <DecksSection onSelectConsultation={onSelectConsultation} />
 
       {/* Edit Trigger - Discreet */}
-      <div className="flex justify-center pt-4 border-t border-white/5">
+      <div className="hidden">
         <button
           onClick={() => {
             setEditForm(profile);
@@ -331,7 +331,7 @@ export function MentorProfileView({ onSelectConsultation }: { onSelectConsultati
 
       {/* Edit Profile Modal Overhaul */}
       <AnimatePresence>
-        {isEditing && (
+        {false && isEditing && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
